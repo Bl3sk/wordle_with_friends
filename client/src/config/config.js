@@ -2,7 +2,7 @@ import axios from "axios";
 
 let url;
 if (process.env.NODE_ENV === "production") {
-    url = "https://wordle-with-friends-backend-45g5.onrender.com"
+    url = "https://wordlewithfriendsbackend.onrender.com"
 } else {
     url = "http://localhost:8080/"
 }
