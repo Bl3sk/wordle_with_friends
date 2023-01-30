@@ -46,6 +46,11 @@ setInterval(async () => {
         return
     } else {
         lastDay = today
+        console.log("Jdeme ověřit jestli nemáme už slova.")
+        let words = await libraryDao.getWords(today);
+        console.log(words)
+        if (words !== null) return
+        console.log("Opravdu nemáme slova.")
         const newClassic = answersOnly[Math.floor(Math.random()*answersOnly.length)]
         const newChallenge = answersOnly[Math.floor(Math.random()*answersOnly.length)]
         try {
@@ -62,7 +67,7 @@ setInterval(async () => {
         }
         console.log("Nová slova vložena.")
     }
-}, 1000) 
+}, 3000) 
 
 
 

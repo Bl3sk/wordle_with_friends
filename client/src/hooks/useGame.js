@@ -61,7 +61,7 @@ function useGame( solutions, gameType ) {
       setGamesStatus(wordsStorage)
     },[gameType]) 
 
-    // aktualizace local storage po zadání slova 
+    // aktualizace local storage po zadání slova, zobrazení po modalu po konci hry
     useEffect(() => {
       if (gameStatus.round !== 0 && gameStatus.status === "in progress") {
         localStorage.setItem(gameType === "classic" ? "classic" : "challenge", JSON.stringify(gameStatus))
@@ -143,14 +143,14 @@ function useGame( solutions, gameType ) {
           ...gameStatus, 
           usedWords: newUsedWords,
           round: gameStatus.round + 1,
-          usedKeys: newData.usedKeys})
+          usedKeys: newData.usedKeys
+        })
         setcurrWord("")
         return
       }
 
       const checkCorrectWord = (word) => {
         return (allWords.includes(word) ? true : false)
-
       }
 
       const handleNotValidWord = () => {
