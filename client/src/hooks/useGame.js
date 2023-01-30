@@ -1,4 +1,4 @@
-import { useEffect, useState  } from 'react'
+import { useEffect, useState, useRef  } from 'react'
 import * as bootstrap from 'bootstrap';
 
 function useGame( solutions, gameType ) {
@@ -45,8 +45,10 @@ function useGame( solutions, gameType ) {
     const [gameStatus, setGamesStatus] = useState(defaultGameStatus)
     const [currWord, setcurrWord] = useState("")
     const solutionWord = gameType === "classic" ? solutions.classic_word : solutions.challenge_word
+    const [messageToast, setMessageToast] = useState("")
+    const messageId = useRef(0);
     console.log(solutionWord, "v use Game")
-
+    console.log(messageToast)
     // při reloadu stránky se získají zpět data z local storage
     useEffect(() => {     
       const date = new Date()
@@ -70,6 +72,11 @@ function useGame( solutions, gameType ) {
       }
       let myModal = new bootstrap.Modal(document.getElementById('resultModal'))
       if (Object.keys(gameStatus.usedWords[gameStatus.round-1])[0] === solutionWord) {
+        messageId.current = messageId.current + 1;
+        setMessageToast({
+          text: "Well played!",
+          id: messageId.current
+        })
         setGamesStatus({
           ...gameStatus, 
           status: "win"})
@@ -77,6 +84,11 @@ function useGame( solutions, gameType ) {
         return
       } 
       if (gameStatus.round >= 6 ) {
+        messageId.current = messageId.current + 1;
+        setMessageToast({
+          text: "Better luck next time!",
+          id: messageId.current
+        })
         setGamesStatus({
           ...gameStatus, 
           status: "lose"})
@@ -93,6 +105,14 @@ function useGame( solutions, gameType ) {
         let key = !e.target.getAttribute("data-key") ? e.key : e.target.getAttribute("data-key")
         key = key.toLowerCase()
         if(currWord.length >= 5 && key !== "enter" && key !== "backspace") return
+        if(currWord.length < 5 && key === "enter") {
+          messageId.current = messageId.current + 1;
+          setMessageToast({
+            text: "Not enough letters!",
+            id: messageId.current
+          })
+          return
+        }
         if(key.match(/[a-z]/) && key.length === 1 ) {
           setcurrWord(currWord + key)
           return
@@ -159,13 +179,15 @@ function useGame( solutions, gameType ) {
         setTimeout(() => {
           rows[gameStatus.round].classList.remove("invalidWord")
         }, 500)
-        let toast = document.getElementById("invalidWordToast")
-        toast = new bootstrap.Toast(toast)
-        toast.show()
+        messageId.current = messageId.current + 1;
+        setMessageToast({
+          text: "Word not found in list!",
+          id: messageId.current
+        })
       }
       
   return (
-    { gameStatus, currWord, handleKeyClick }
+    { gameStatus, currWord, messageToast, handleKeyClick }
   )
 }
 

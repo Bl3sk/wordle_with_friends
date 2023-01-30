@@ -17,7 +17,7 @@ function useWords() {
         .then((data) => {
             console.log("Získana data: ", data)
             if(!data.data) {
-                console.log("Nedostali jsme žádná data, dojde k refreshi.")
+                console.log("Nedostali jsme žádná data.")
                 //location.reload()
                 localStorage.clear();
                 return
