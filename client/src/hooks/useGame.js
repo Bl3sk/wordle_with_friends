@@ -106,6 +106,11 @@ function useGame( solutions, gameType ) {
         key = key.toLowerCase()
         if(currWord.length >= 5 && key !== "enter" && key !== "backspace") return
         if(currWord.length < 5 && key === "enter") {
+          const rows = document.getElementsByClassName("row")
+          rows[gameStatus.round].classList.add("invalidWord")
+          setTimeout(() => {
+            rows[gameStatus.round].classList.remove("invalidWord")
+          }, 500)
           messageId.current = messageId.current + 1;
           setMessageToast({
             text: "Not enough letters!",
