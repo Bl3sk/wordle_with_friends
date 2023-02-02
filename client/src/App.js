@@ -6,6 +6,7 @@ import { useState } from 'react';
 function App() {
   const { solutions } = useWords()
   const [gameType, setGameType] = useState("classic")
+  console.log(solutions)
   return (
     <div className="App">
       <header>
@@ -33,9 +34,9 @@ function App() {
       <button className={ gameType==="classic" ? "button selected classic" : "button classic" } onClick={ () => setGameType("classic") }>Classic</button>
       <button className={ gameType==="challenge" ? "button selected chall" : "button chall" } onClick={ () => setGameType("challenge") }>Challenge</button>
       <Countdown />
-      { solutions===false && <div><div className="spinner-border m-5" role="status"/> <p>If page is loading too long, please try to refresh the page.</p></div> }
-      { gameType==="classic" && solutions && <Game solutions={ solutions } gameType="classic" /> }
-      { gameType==="challenge" && solutions && <Game solutions={ solutions }  gameType="challenge"/> }
+      { solutions.classic_word === null && <div><div className="spinner-border m-5" role="status"/> <p>If page is loading too long, please try to refresh the page.</p></div> }
+      { solutions.classic_word !== null && gameType==="classic" && <Game solutions={ solutions } gameType="classic" /> }
+      { solutions.challenge_word !== null && gameType==="challenge" && <Game solutions={ solutions }  gameType="challenge"/> }
     </div>
   );
 }
