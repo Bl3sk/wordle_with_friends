@@ -47,8 +47,9 @@ function useGame( solutions, gameType ) {
     const solutionWord = gameType === "classic" ? solutions.classic_word : solutions.challenge_word
     const [messageToast, setMessageToast] = useState("")
     const messageId = useRef(0);
+    const usedKeysHelper = useRef(defaultUsedKeys);
     console.log(solutionWord, "v use Game")
-    console.log(messageToast)
+
     // při reloadu stránky se získají zpět data z local storage
     useEffect(() => {     
       const date = new Date()
@@ -63,8 +64,26 @@ function useGame( solutions, gameType ) {
       setGamesStatus(wordsStorage)
     },[gameType]) 
 
+
     // aktualizace local storage po zadání slova, zobrazení po modalu po konci hry
     useEffect(() => {
+      const objectsEquals = () => {
+        const usedKeysHelperVals = Object.values(usedKeysHelper.current)
+        const defaultUsedKeysVals = "key,".repeat(25)+"key"
+        if (usedKeysHelperVals.toString() === defaultUsedKeysVals){
+          return true
+        } else {
+          return false
+        }
+      }
+      if (usedKeysHelper.current !== gameStatus.usedKeys && !objectsEquals()){
+        setTimeout(() => {
+          setGamesStatus({
+            ...gameStatus, 
+            usedKeys: usedKeysHelper.current
+          })
+        }, 1950)
+      }
       if (gameStatus.round !== 0 && gameStatus.status === "in progress") {
         localStorage.setItem(gameType === "classic" ? "classic" : "challenge", JSON.stringify(gameStatus))
       } else {
@@ -96,7 +115,6 @@ function useGame( solutions, gameType ) {
         return
       }
     },[gameStatus, gameType, solutionWord])
-
 
     // funkce
     const handleKeyClick = (e) => {
@@ -137,7 +155,7 @@ function useGame( solutions, gameType ) {
 
       const getLetterStyles = () => {
         const styles = []
-        const newUsedKeys = gameStatus.usedKeys
+        let newUsedKeys = {...gameStatus.usedKeys}
         let i = 0
         for(let letter of currWord){
           if(letter === solutionWord.charAt(i)) {
@@ -153,6 +171,7 @@ function useGame( solutions, gameType ) {
           }
           i++;
         }
+        usedKeysHelper.current = newUsedKeys
         const newData = {
           usedKeys: newUsedKeys,
           styles: styles
@@ -167,9 +186,9 @@ function useGame( solutions, gameType ) {
         setGamesStatus({
           ...gameStatus, 
           usedWords: newUsedWords,
-          round: gameStatus.round + 1,
-          usedKeys: newData.usedKeys
+          round: gameStatus.round + 1
         })
+       
         setcurrWord("")
         return
       }

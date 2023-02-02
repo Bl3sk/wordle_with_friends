@@ -3,8 +3,6 @@ import * as bootstrap from 'bootstrap';
 
 const ToastInvalidWord = ({ message }) => {
     const messId = useRef(0);
-    console.log(messId.current);
-    console.log(messId, message.id)
     if (message.id !== messId.current && message.text){
         messId.current = message.id
         let toast = document.getElementById("invalidWordToast")
