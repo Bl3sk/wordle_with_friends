@@ -1,6 +1,6 @@
 import Keyboard from "./Keyboard";
 import Board from "./Board";
-import ToastInvalidWord from "./ToastInvalidWord";
+import Toast from "./Toast";
 import Modal from "./Modal";
 import useGame from "../hooks/useGame";
 import { useEffect } from "react";
@@ -13,7 +13,7 @@ function Game( { solutions, gameType } ) {
   }, [gameStatus, handleKeyClick])
   return (
     <div className="game">
-      <ToastInvalidWord message={ messageToast }></ToastInvalidWord>
+      <Toast message={ messageToast }></Toast>
       <Modal gameStatus={ gameStatus } solutions={ solutions } gameType={ gameType }/>
       <Board gameStatus={ gameStatus } currWord={ currWord }/>
       <Keyboard gameStatus={ gameStatus } handleKeyClick={ handleKeyClick }/>

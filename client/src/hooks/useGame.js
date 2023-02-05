@@ -47,6 +47,7 @@ function useGame( solutions, gameType ) {
     const solutionWord = gameType === "classic" ? solutions.classic_word : solutions.challenge_word
     const [messageToast, setMessageToast] = useState("")
     const messageId = useRef(0);
+    const pauseGame = useRef(false);
     const usedKeysHelper = useRef(defaultUsedKeys);
     console.log(solutionWord, "v use Game")
 
@@ -67,59 +68,71 @@ function useGame( solutions, gameType ) {
 
     // aktualizace local storage po zadání slova, zobrazení po modalu po konci hry
     useEffect(() => {
-      const objectsEquals = () => {
-        const usedKeysHelperVals = Object.values(usedKeysHelper.current)
-        const defaultUsedKeysVals = "key,".repeat(25)+"key"
-        if (usedKeysHelperVals.toString() === defaultUsedKeysVals){
+      // funkce
+      const objectsMatch = (obj1, obj2) => {
+        const objValues1 = Object.values(obj1)
+        const objValues2 = obj2 === "default" ? "key,".repeat(25)+"key" : Object.values(obj2)
+        if (objValues1.toString() === objValues2.toString()){
           return true
         } else {
           return false
         }
       }
-      if (usedKeysHelper.current !== gameStatus.usedKeys && !objectsEquals()){
+      const finishGame = (text, status) => {
+        const oldLocalStorage = JSON.parse(localStorage.getItem(gameType))
+        const newLocalStorage = {...oldLocalStorage, 
+            status: status,
+            usedKeys: usedKeysHelper.current
+        };
+        localStorage.setItem(gameType, JSON.stringify(newLocalStorage))
+        messageId.current = messageId.current + 1;
+        setTimeout(() => {
+          setMessageToast({
+            text: text,
+            id: messageId.current
+          })
+        }, 1950)
+        setTimeout(() => {
+          setGamesStatus({
+            ...gameStatus, 
+            status: status,
+            usedKeys: usedKeysHelper.current});
+        }, 2950)
+      }
+      // aktualizace klávesnice s delayem
+      if (!objectsMatch(usedKeysHelper.current, "default") && !objectsMatch(usedKeysHelper.current, gameStatus.usedKeys)) {
         setTimeout(() => {
           setGamesStatus({
             ...gameStatus, 
             usedKeys: usedKeysHelper.current
           })
-        }, 1950)
+        }, 1970)
       }
+      // aktualizace local storage
       if (gameStatus.round !== 0 && gameStatus.status === "in progress") {
-        localStorage.setItem(gameType === "classic" ? "classic" : "challenge", JSON.stringify(gameStatus))
+        localStorage.setItem(gameType, JSON.stringify(gameStatus))
       } else {
         return
       }
-      let myModal = new bootstrap.Modal(document.getElementById('resultModal'))
-      if (Object.keys(gameStatus.usedWords[gameStatus.round-1])[0] === solutionWord) {
-        messageId.current = messageId.current + 1;
-        setMessageToast({
-          text: "Well played!",
-          id: messageId.current
-        })
-        setGamesStatus({
-          ...gameStatus, 
-          status: "win"})
-        myModal.show()
-        return
+      // výhra nebo prohra
+      if (Object.keys(gameStatus.usedWords[gameStatus.round-1])[0] === solutionWord) {        
+        finishGame("Well played!", "win")
       } 
-      if (gameStatus.round >= 6 ) {
-        messageId.current = messageId.current + 1;
-        setMessageToast({
-          text: "Better luck next time!",
-          id: messageId.current
-        })
-        setGamesStatus({
-          ...gameStatus, 
-          status: "lose"})
-        myModal.show()
-        return
+      if (gameStatus.round >= 6) {
+        finishGame("Better luck next time!", "lose")
       }
     },[gameStatus, gameType, solutionWord])
 
+    // zobrazení Modalu na konci hry
+    useEffect(() => {    
+      if (gameStatus.status === "in progress") return; 
+      const myModal = new bootstrap.Modal(document.getElementById('resultModal'));
+      myModal.show();
+    },[gameStatus.status]) 
+
     // funkce
     const handleKeyClick = (e) => {
-      console.log(gameStatus)
-        if (gameStatus.status !== "in progress") return
+        if (pauseGame.current || gameStatus.status !== "in progress") return
         let key = !e.target.getAttribute("data-key") ? e.key : e.target.getAttribute("data-key")
         key = key.toLowerCase()
         if(currWord.length >= 5 && key !== "enter" && key !== "backspace") return
@@ -172,23 +185,22 @@ function useGame( solutions, gameType ) {
           i++;
         }
         usedKeysHelper.current = newUsedKeys
-        const newData = {
-          usedKeys: newUsedKeys,
-          styles: styles
-        }
-        return newData
+        return styles
       }
 
       const handleAddWord = () => {
-        const newData = getLetterStyles()
+        pauseGame.current = true
+        setTimeout(() => {
+          pauseGame.current = false
+        }, 1970)
+        const rowStyles = getLetterStyles()
         let newUsedWords = gameStatus.usedWords
-        newUsedWords[gameStatus.round] = {[currWord]: newData.styles}
+        newUsedWords[gameStatus.round] = {[currWord]: rowStyles}
         setGamesStatus({
           ...gameStatus, 
           usedWords: newUsedWords,
           round: gameStatus.round + 1
         })
-       
         setcurrWord("")
         return
       }

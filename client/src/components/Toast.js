@@ -1,7 +1,7 @@
 import { useRef  } from 'react'
 import * as bootstrap from 'bootstrap';
 
-const ToastInvalidWord = ({ message }) => {
+const Toast = ({ message }) => {
     const messId = useRef(0);
     if (message.id !== messId.current && message.text){
         messId.current = message.id
@@ -22,4 +22,4 @@ const ToastInvalidWord = ({ message }) => {
     );
   }
   
-  export default ToastInvalidWord;
+  export default Toast;
