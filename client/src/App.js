@@ -2,6 +2,7 @@ import Game from './components/Game';
 import Countdown from './components/Countdown';
 import useWords from './hooks/useWords';
 import { useState } from 'react';
+import * as bootstrap from 'bootstrap';
 
 function App() {
   const { solutions } = useWords()
@@ -16,7 +17,7 @@ function App() {
           </button>
           <ul className="dropdown-menu ms-1">
             <li><a className="dropdown-item" href="/#"><i className="bi bi-person-fill"></i> Profil</a></li>
-            <li><a className="dropdown-item" href="/#"><i className="bi bi-trophy-fill"></i> Statistics</a></li>
+            <li><a className="dropdown-item" href="/#"><i className="bi bi-trophy-fill"></i> Leaderboards</a></li>
             <li><a className="dropdown-item" href="/#"><i className="bi bi-gear-fill"></i> Settings</a></li>
             <div className="dropdown-divider"></div>
             <li><a className="dropdown-item" href="/#"><i className="bi bi-info-circle-fill"></i> About game</a></li>
@@ -25,7 +26,11 @@ function App() {
         </div>
         <div className="header-title">Wordle with friends</div>
         <div>
-          <button type="button" className="btn text-white p-1">
+          <button type="button" 
+            className="btn text-white p-1" 
+            onClick={() => {
+              const myModal = new bootstrap.Modal(document.getElementById('registrationModal'));
+              myModal.show();}}>
             Login / Register
           </button>
         </div>

@@ -1,7 +1,8 @@
 import Keyboard from "./Keyboard";
 import Board from "./Board";
 import Toast from "./Toast";
-import Modal from "./Modal";
+import ResultModal from "./ModalResult";
+import RegistrationModal from "./ModalRegistration";
 import useGame from "../hooks/useGame";
 import { useEffect } from "react";
 
@@ -14,7 +15,8 @@ function Game( { solutions, gameType } ) {
   return (
     <div className="game">
       <Toast message={ messageToast }></Toast>
-      <Modal gameStatus={ gameStatus } solutions={ solutions } gameType={ gameType }/>
+      <ResultModal gameStatus={ gameStatus } solutions={ solutions } gameType={ gameType }/>
+      <RegistrationModal/>
       <Board gameStatus={ gameStatus } currWord={ currWord }/>
       <Keyboard gameStatus={ gameStatus } handleKeyClick={ handleKeyClick }/>
     </div>

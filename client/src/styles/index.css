@@ -28,7 +28,7 @@ svg { pointer-events: none; }
   justify-content: space-between;
 }
 /*       Header     */
-header {
+header, .modalHeader {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -58,7 +58,7 @@ header .material-icons {
   font-size: min(max(16px, 1.7vw), 5vw);
   color: beige;
   display: flex;
-  justify-content: left;
+  justify-content: center;
 }
 .dropdown-toggle::after {
   content: none;
@@ -93,6 +93,8 @@ hr {
 
 /*       Board     */
 .row {
+  position: relative;
+  z-index: -1;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -186,6 +188,12 @@ hr {
   justify-content: center;
   align-items: center;
 }
+
+/*       Modal     */
+.modal {
+  margin-top: 4rem;
+}
+
 
 /*       Animations     */
 @keyframes flip {
