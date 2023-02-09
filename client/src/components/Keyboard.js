@@ -1,4 +1,8 @@
-const Keyboard = ({ gameStatus, handleKeyClick }) => {
+import { useContext } from "react";
+import { GameContext } from "./Game";
+
+const Keyboard = ({ handleKeyClick }) => {
+  const gameStatus = useContext(GameContext);
   const usedKeys = gameStatus.usedKeys
   const keyboardRow1 = ["q", "w", "e", "r", "t", "z", "u", "i", "o", "p"]
   const keyboardRow2 = ["a", "s", "d", "f", "g", "h", "j", "k", "l"]

@@ -132,7 +132,8 @@ function useGame( solutions, gameType ) {
 
     // funkce
     const handleKeyClick = (e) => {
-        if (pauseGame.current || gameStatus.status !== "in progress") return
+        const modalShown = document.getElementsByClassName("modal fade text-dark show").length
+        if (pauseGame.current || gameStatus.status !== "in progress" || modalShown !== 0) return
         let key = !e.target.getAttribute("data-key") ? e.key : e.target.getAttribute("data-key")
         key = key.toLowerCase()
         if(currWord.length >= 5 && key !== "enter" && key !== "backspace") return

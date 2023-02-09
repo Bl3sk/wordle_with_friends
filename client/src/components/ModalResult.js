@@ -1,9 +1,12 @@
+import { useContext } from "react";
+import { GameContext } from "./Game";
 import * as bootstrap from 'bootstrap';
 
-const Modal = ( { gameStatus, solutions, gameType } ) => {
+const Modal = ( { solutions, gameType } ) => {
+    const gameStatus = useContext(GameContext);
     const thumbIcon = gameStatus.status === "win" ? "bi bi-hand-thumbs-up" : "bi bi-hand-thumbs-down";
-    const resultTries = gameStatus.round + "/6"
-    const score = 600 - (gameStatus.round - 1) * 100
+    const resultTries = gameStatus.round + "/6";
+    const score = 600 - (gameStatus.round - 1) * 100;
     console.log(gameStatus)
     const result = gameStatus.usedWords.filter((word) => {
       if (Object.keys(word).length === 0) return false
@@ -21,7 +24,7 @@ const Modal = ( { gameStatus, solutions, gameType } ) => {
       return resultRow
     })
     function copyResult() {
-      const tooltipEl = document.querySelector('[data-bs-toggle="tooltip"]')
+      const tooltipEl = document.querySelector('[data-bs-toggle="tooltip"]');
       var tooltip = new bootstrap.Tooltip(tooltipEl, {
         animation: true,
         trigger: "manual",

@@ -1,6 +1,9 @@
 import Row from "./Row";
+import { useContext } from "react";
+import { GameContext } from "./Game";
 
-const Board = ( { gameStatus, currWord }) => {
+const Board = ( { currWord }) => {
+  const gameStatus = useContext(GameContext)
   let currWordRendered = false
     return (
         <div className="board">
