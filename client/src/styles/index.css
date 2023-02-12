@@ -125,6 +125,10 @@ hr {
 .box:nth-child(5) {
   animation-delay: 1.55s;
 }
+.noAnimation {
+  animation-duration: 0ms !important;
+  animation-delay: 0ms !important;
+}
 [data-state = "correct"] {
   --background-color: #16a34a;
   animation: flip 0.4s ease forwards;
