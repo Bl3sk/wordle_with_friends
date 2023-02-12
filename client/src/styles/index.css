@@ -6,6 +6,7 @@ body, html {
   background: linear-gradient(to bottom, #051937, #1f2546, #363255, #4c4064, #493a66);
   background: rgb(26 115 232);
   color: whitesmoke;
+  font-family: Verdana, sans-serif;
 }
 body {
   position: fixed;
@@ -54,7 +55,6 @@ header .material-icons {
 }
 .header-title {
   align-items: center;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   font-size: min(max(16px, 1.7vw), 5vw);
   color: beige;
   display: flex;

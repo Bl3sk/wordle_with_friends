@@ -11,11 +11,11 @@ function App() {
   return (
     <div className="App">
       <header>
-        <div className="dropdown dropdown-menu-end">
-          <button type="button" className="btn text-white dropdown-toggle p-1" data-bs-toggle="dropdown">
+        <div className="dropdow">
+          <button type="button" className="btn text-white dropdown-toggle p-1" data-bs-toggle="dropdown" data-bs-offset="5, 5">
             <div className="material-icons">menu</div>
           </button>
-          <ul className="dropdown-menu ms-1">
+          <ul className="dropdown-menu">
             <li><a className="dropdown-item" href="/#"><i className="bi bi-person-fill"></i> Profil</a></li>
             <li><a className="dropdown-item" href="/#"><i className="bi bi-trophy-fill"></i> Leaderboards</a></li>
             <li><a className="dropdown-item" href="/#"><i className="bi bi-gear-fill"></i> Settings</a></li>
