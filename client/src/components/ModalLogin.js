@@ -9,9 +9,8 @@ const Modal = (  ) => {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modalHeader bg-primary bg-gradient text-white">
-              <button type="button" style={{ visibility: "hidden" }} className="btn-close mx-1 my-auto" data-bs-dismiss="modal" aria-label="Close"></button>
-              <div className="fs-4 text p-1">{displayForm}</div>
-              <button type="button" className="btn-close mx-1 my-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+              <div className="fs-4 text p-1 mx-auto">{displayForm}</div>
+              <button type="button" className="btn-close my-auto m-1" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             { displayForm === "Login" && <FormLogin setDisplayForm={setDisplayForm}/> }
             { displayForm === "Register" && <FormRegister setDisplayForm={setDisplayForm}/>}

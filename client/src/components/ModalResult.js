@@ -47,8 +47,7 @@ const Modal = ( { solutions, gameType } ) => {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modalHeader bg-primary bg-gradient text-white">
-              <button type="button" style={{ visibility: "hidden" }} className="btn-close mx-1 my-auto" data-bs-dismiss="modal" aria-label="Close"></button>
-              <div className="fs-4 text p-1">Result <i className={thumbIcon + " text-white fs-4"}></i></div>
+              <div className="fs-4 text p-1 mx-auto">Result <i className={thumbIcon + " text-white fs-4"}></i></div>
               <button type="button" className="btn-close mx-1 my-auto" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">

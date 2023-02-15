@@ -194,10 +194,50 @@ hr {
 }
 
 /*       Modal     */
+.btn-close {
+  position: absolute;
+  margin-left: calc(100% - 30px)!important;
+  top: 0.5rem !important;
+}
 .modal {
   margin-top: 4rem;
 }
 
+/*       Form     */
+form > div {
+  display: flex;
+  margin: 0 auto 1rem;
+}
+form i {
+  font-size: 1.5rem;
+  margin-top: 0.5rem;
+  margin-right: 0.2rem;
+}
+.form-container {
+  display: flex;
+  justify-content: center;
+  width: 60%;
+}
+form input {
+  height: calc(3.1rem + 2px) !important;
+  font-size: 1.1rem;
+  width: 100%;
+}
+form > label {
+  font-size: 1rem;
+  padding: 1rem 2.9rem !important;
+  margin: 0 !important;
+}
+.form-floating {
+  flex-direction: column;
+}
+.invalid-feedback {
+  text-align: start;
+}
+.button-sec {
+  font-size: 0.9rem;
+  padding: 5px;
+}
 
 /*       Animations     */
 @keyframes flip {
@@ -264,5 +304,8 @@ hr {
   }
   .key {
     height: 3.2rem;
+  }
+  .form-container {
+    width: 85%;
   }
 }
