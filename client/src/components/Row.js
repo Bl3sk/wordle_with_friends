@@ -8,7 +8,7 @@ const Row = ( {word, dataStates} ) => {
         <div className="row">
             {dataStates.map((dataState, index) => {
                return <div key={index}
-                    className={`${word.charAt(index) && !dataStates ? "currentGuess" : "box" + animationOption}`} 
+                    className={`${word.charAt(index) && !dataState ? "currentGuess" : "box" + animationOption}`} 
                     data-state={ dataState }>{ word.charAt(index) }
                 </div>
             })}

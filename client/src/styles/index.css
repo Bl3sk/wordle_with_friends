@@ -294,16 +294,19 @@ form > label {
     font-size: 9px
   }
   .row div {
-    font-size: 1.5em;
+    font-size: 1.45em;
   }
   .game, .game, #root {
     justify-content: flex-start;
   }
   .keyboard {
-    margin-top: 1.2em;
+    margin-top: 0.8em;
   }
   .key {
     height: 3.2rem;
+  }
+  .modal {
+    margin-top: 1rem;
   }
   .form-container {
     width: 85%;
