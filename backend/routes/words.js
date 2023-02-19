@@ -21,6 +21,7 @@ router.post("/", async (req, res) => {
             words
         });
     } catch (error) {
+        console.log(error)
         res.status(500).json({
             msg: "Došlo k chybě."
         })

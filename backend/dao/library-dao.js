@@ -7,17 +7,23 @@ const connectionString = process.env.MONGO_URI
 class LibraryDao {
  // initialize the connection the database and specify the collection name
     constructor() {
-        this.collectionName = "words"
+        this.wordsCollection = "words"
+        this.usersCollection = "users"
         DbConnection.init(connectionString);
  }
     // returns book or null
     async getWords(date) {
-        console.log("před připojením")
         let db = await DbConnection.get(connectionString);
-        console.log("jako po připojením")
         return await db
-            .collection(this.collectionName)
+            .collection(this.wordsCollection)
             .findOne({ date: date })
+    }
+    async getUser(user) {
+        console.log(user)
+        let db = await DbConnection.get(connectionString);
+        return await db
+            .collection(this.usersCollection)
+            .find({$or: [{nickname: user.nickname}, {email: user.email}]})
     }
 
     // returns the first 1000 books by default
@@ -49,18 +55,28 @@ class LibraryDao {
         //let filter = { code };
         let db = await DbConnection.get(connectionString);
         let status = await db
-            .collection(this.collectionName)
+            .collection(this.wordsCollection)
             .deleteOne({ code : codeStr })
         console.log(status)
         if (!status || !status.acknowledged) {
             throw new Error("Unexpected Error");
         }
     }
-   // insert a new book to the collection
+    // add
     async addWords(data) {
         let db = await DbConnection.get(connectionString);
         let status = await db
-            .collection(this.collectionName)
+            .collection(this.wordsCollection)
+            .insertOne(data)
+        console.log(status)
+        if (!status || !status.acknowledged) {
+            throw new Error("Unexpected Error");
+        }
+    }
+    async addUser(data) {
+        let db = await DbConnection.get(connectionString);
+        let status = await db
+            .collection(this.usersCollection)
             .insertOne(data)
         console.log(status)
         if (!status || !status.acknowledged) {
@@ -72,7 +88,7 @@ class LibraryDao {
         let filter = { codeText };
         let db = await DbConnection.get(connectionString);
         let status = await db
-            .collection(this.collectionName)
+            .collection(this.wordsCollection)
             .updateOne( { code: codeText }, { $set: { name: "hovnoo" } } )
         console.log(status)
         if (!status || !status.acknowledged) {
@@ -83,7 +99,7 @@ class LibraryDao {
     async count(filter) {
         let db = await DbConnection.get(connectionString);
         return await db
-            .collection(this.collectionName)
+            .collection(this.wordsCollection)
             .countDocuments(filter)
         }
     // returns the array of books according to params
@@ -94,7 +110,7 @@ class LibraryDao {
     async _findWrapper(filter, options, skip = 0, sort = {}, limit = 0) {
         let db = await DbConnection.get(connectionString);
         return db
-            .collection(this.collectionName)
+            .collection(this.wordsCollection)
             .find(filter, options)
             .skip(skip)
             .sort(sort)

@@ -3,18 +3,10 @@ const express = require("express")
 const morgan = require("morgan")
 const cors = require("cors")
 const wordsRoute = require("./routes/words")
-
+const usersRoute = require("./routes/users")
 
 const app = express()
 const PORT = process.env.PORT || 8080
-
-/*
-if (process.env.NODE_ENV === "production") {
-    app.use(express.static("../client/build"))
-    app.get("*", (req, res) => {
-        res.sendFile(path.resolve(__dirname, "client", "build", "index.html"))
-    })
-}*/
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
@@ -24,14 +16,8 @@ app.use(cors({
     origin: '*'
 }));
 
-// funguje API na samotném serveru, akorát ne na frontendu
-/*app.use(
-    cors({
-        origin: ["http://localhost:3000", "https://wordle_with_friends2.onrender.com"]
-    })
-    );*/
-
 app.use("/words", wordsRoute)
+app.use("/users", usersRoute)
 
 
 const libraryDao = require("./dao/library-dao");
@@ -68,14 +54,6 @@ setInterval(async () => {
         console.log("Nová slova vložena.")
     }
 }, 3000) 
-
-
-
-
-app.use("/", (req, res) => {
-    res.json("funguje")
-    console.log("log funguje")
-})
 
 
 
