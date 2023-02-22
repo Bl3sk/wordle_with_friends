@@ -1,11 +1,13 @@
 import Game from './components/Game';
 import Countdown from './components/Countdown';
 import useWords from './hooks/useWords';
+import useAuthContext from './hooks/useAuthContext';
 import { useState } from 'react';
 import * as bootstrap from 'bootstrap';
 
 function App() {
   const { solutions } = useWords()
+  const { loggedUser } = useAuthContext()
   const [gameType, setGameType] = useState("classic")
   console.log(solutions)
   return (
@@ -25,7 +27,7 @@ function App() {
           </ul>
         </div>
         <div className="header-title">Wordle with friends</div>
-        <div>
+        { !loggedUser &&  <div>
           <button type="button" 
             className="btn text-white p-1" 
             onClick={() => {
@@ -33,7 +35,16 @@ function App() {
               myModal.show();}}>
             Login / Register
           </button>
-        </div>
+        </div> }
+        { loggedUser &&  <div>
+          <button type="button" 
+            className="btn text-white p-1" 
+            onClick={() => {
+              const myModal = new bootstrap.Modal(document.getElementById('registrationModal'));
+              myModal.show();}}>
+            { loggedUser.nickname }
+          </button>
+        </div> }
       </header>
       <hr/>
       <button className={ gameType==="classic" ? "button selected classic" : "button classic" } onClick={ () => setGameType("classic") }>Classic</button>

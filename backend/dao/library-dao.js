@@ -23,7 +23,7 @@ class LibraryDao {
         let db = await DbConnection.get(connectionString);
         return await db
             .collection(this.usersCollection)
-            .find({$or: [{nickname: user.nickname}, {email: user.email}]})
+            .findOne(user)
     }
 
     // returns the first 1000 books by default
@@ -73,7 +73,7 @@ class LibraryDao {
             throw new Error("Unexpected Error");
         }
     }
-    async addUser(data) {
+    async registerUser(data) {
         let db = await DbConnection.get(connectionString);
         let status = await db
             .collection(this.usersCollection)

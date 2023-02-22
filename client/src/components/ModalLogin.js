@@ -12,7 +12,7 @@ const Modal = (  ) => {
               <div className="fs-4 text p-1 mx-auto">{displayForm}</div>
               <button type="button" className="btn-close my-auto m-1" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div className="modal-body">
             { displayForm === "Login" && <FormLogin setDisplayForm={setDisplayForm}/> }
             { displayForm === "Register" && <FormRegister setDisplayForm={setDisplayForm}/>}
             </div>

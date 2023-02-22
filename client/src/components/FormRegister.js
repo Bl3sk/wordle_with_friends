@@ -23,31 +23,28 @@ const FormRegister = ( {setDisplayForm} ) => {
       if (email !== "valid" || nickname !== "valid" || psw !== "valid" || rptPsw !== "valid") return
       console.log("Jdeme registrovat:", registerData)
       axiosInstance({
-        url: `/users`,
+        url: `/users/register`,
         method: "POST",
         data: registerData
       })
       .then((res) => {
         console.log(res.data.msg, res);
-        if ("Data uložena.") alert('You have been succesfully registered! <br> You can login now.', 'success')
+        if (res.data.msg === "Data uložena.") alert('You have been succesfully registered! <br> You can login now.', 'success')
       })
       .catch((err) => {
         console.log(err.response.data.msg, err);
         const usedData = err.response.data.data;
+        console.log(usedData)
         const nicknamesArr = [...alreadyUsed.usedNicknames]
         const emailsArr = [...alreadyUsed.usedEmails]
-        for (let user of usedData) {
-          console.log(user)
-          if (user.nickname === registerData.nickname) nicknamesArr.push(registerData.nickname)
-          if (user.email === registerData.email) emailsArr.push(registerData.email)
-        }
+        if (usedData.nicknameExist) nicknamesArr.push(registerData.nickname)
+        if (usedData.emailExist) emailsArr.push(registerData.email)
         setAlreadyUsed({
           usedNicknames: nicknamesArr,
           usedEmails: emailsArr
         })
       })
     }
-
     const checkValidationNickname = useCallback(() => {
       if (registerData.nickname.length >= 3 && registerData.nickname.length <= 10) return "valid"
       if (registerData.nickname.length < 3 || registerData.nickname.length > 10) return "invalid"     
@@ -75,7 +72,6 @@ const FormRegister = ( {setDisplayForm} ) => {
       el.classList.add("is-" + option);
     };
     
-
     function alert(message, type) {
       const alertPlaceholder = document.getElementById('registrationAlert')
       const wrapper = document.createElement('div')
@@ -87,14 +83,6 @@ const FormRegister = ( {setDisplayForm} ) => {
       ].join('')
       alertPlaceholder.append(wrapper)
     };
-
-    /*useEffect(() => {
-      const nickname = document.querySelector("#floatingNick")
-      const email = document.querySelector("#floatingEmail")
-      if (alreadyUsed.usedNicknames.includes(registerData.nickname)) showFeedback(nickname, "invalid")
-      if (alreadyUsed.usedEmails.includes(registerData.email)) showFeedback(email, "invalid")
-      //if (alreadyUsed.usedEmails) showFeedback(email, "invalid")
-    }, [alreadyUsed, registerData.nickname, registerData.email]);*/
 
     useEffect(() => {
       const input = document.querySelector("#floatingNick")
@@ -206,7 +194,7 @@ const FormRegister = ( {setDisplayForm} ) => {
             <hr style={{width:"90%", margin: "0.5rem auto", opacity: 0.6}}></hr>
             <div>
                 <span style={{ fontSize: "0.85rem" }}>Already have an account?</span>
-                <button type="submit" className="btn btn-dark button-sec m-2" onClick={() => {setDisplayForm("Login")}}>Login</button>
+                <button className="btn btn-dark button-sec m-2" onClick={() => {setDisplayForm("Login")}}>Login</button>
             </div>
         </div>
      );
