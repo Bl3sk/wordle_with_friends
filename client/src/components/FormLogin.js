@@ -1,9 +1,9 @@
 import { axiosInstance } from '../config/config'
 import { useState } from "react"
-import useAuthContext from '../hooks/useAuthContext';
+import useAuthUser from '../hooks/useAuthUser';
 
 const FormLogin = ( {setDisplayForm} ) => {
-  const { setLoggedUser } = useAuthContext()
+  const { setLoggedUser } = useAuthUser()
 
   const [loginData, setLoginData] = useState({
     nickname: "",

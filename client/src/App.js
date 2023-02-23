@@ -1,13 +1,13 @@
 import Game from './components/Game';
 import Countdown from './components/Countdown';
 import useWords from './hooks/useWords';
-import useAuthContext from './hooks/useAuthContext';
+import useAuthUser from './hooks/useAuthUser';
 import { useState } from 'react';
 import * as bootstrap from 'bootstrap';
 
 function App() {
   const { solutions } = useWords()
-  const { loggedUser, setLoggedUser } = useAuthContext()
+  const { loggedUser, setLoggedUser } = useAuthUser()
   const [gameType, setGameType] = useState("classic")
   console.log(solutions)
   return (

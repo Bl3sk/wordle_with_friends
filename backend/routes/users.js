@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 
 function createToken (id) {
-    return jwt.sign({id}, "testString", { expiresIn: "5min" })
+    return jwt.sign({id}, "testString", { expiresIn: "7d" })
 }
 
 router.post("/register", async (req, res) => {
