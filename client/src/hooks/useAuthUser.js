@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import jwtDecode  from 'jwt-decode'
 
 function useAuthContext() {
-    const [loggedUser, setLoggedUser] = useState(null)
+    const [loggedUser, setLoggedUser] = useState("")
     console.log(loggedUser)
 
     // získání přihlášeného uživatele z local storage

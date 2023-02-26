@@ -2,7 +2,7 @@ import { useState } from "react";
 import FormLogin from "./FormLogin";
 import FormRegister from "./FormRegister";
 
-const Modal = (  ) => {
+const ModalForm = ( {setLoggedUser} ) => {
     const [displayForm, setDisplayForm] = useState("Login")
     return ( 
       <div className="modal fade text-dark" id="registrationModal" aria-labelledby="resultModalLabel" aria-hidden="true">
@@ -13,7 +13,7 @@ const Modal = (  ) => {
               <button type="button" className="btn-close my-auto m-1" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
-            { displayForm === "Login" && <FormLogin setDisplayForm={setDisplayForm}/> }
+            { displayForm === "Login" && <FormLogin setDisplayForm={setDisplayForm} setLoggedUser={setLoggedUser}/> }
             { displayForm === "Register" && <FormRegister setDisplayForm={setDisplayForm}/>}
             </div>
           </div>
@@ -22,4 +22,4 @@ const Modal = (  ) => {
      );
 }
  
-export default Modal;
+export default ModalForm;

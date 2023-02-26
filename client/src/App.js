@@ -2,6 +2,8 @@ import Game from './components/Game';
 import Countdown from './components/Countdown';
 import useWords from './hooks/useWords';
 import useAuthUser from './hooks/useAuthUser';
+import ModalProfile from "./components/ModalProfile";
+import ModalForm from "./components/ModalForm";
 import { useState } from 'react';
 import * as bootstrap from 'bootstrap';
 
@@ -9,7 +11,7 @@ function App() {
   const { solutions } = useWords()
   const { loggedUser, setLoggedUser } = useAuthUser()
   const [gameType, setGameType] = useState("classic")
-  console.log(solutions)
+  console.log(solutions, loggedUser)
   return (
     <div className="App">
       <header>
@@ -23,7 +25,7 @@ function App() {
             <li><a className="dropdown-item" href="/#"><i className="bi bi-gear-fill"></i> Settings</a></li>
             <div className="dropdown-divider"></div>
             <li><a className="dropdown-item" href="/#"><i className="bi bi-info-circle-fill"></i> About game</a></li>
-            {loggedUser && <li><a className="dropdown-item" href="/#" onClick={() => {setLoggedUser(null)}}><i className="bi bi-box-arrow-in-right"></i> Log out</a></li>}
+            {loggedUser && <li><a className="dropdown-item" href="/#" onClick={() => {setLoggedUser("")}}><i className="bi bi-box-arrow-in-right"></i> Log out</a></li>}
           </ul>
         </div>
         <div className="header-title">Wordle with friends</div>
@@ -40,7 +42,7 @@ function App() {
           <button type="button" 
             className="btn text-white p-1" 
             onClick={() => {
-              const myModal = new bootstrap.Modal(document.getElementById('registrationModal'));
+              const myModal = new bootstrap.Modal(document.getElementById('profileModal'));
               myModal.show();}}>
             { loggedUser.nickname }
           </button>
@@ -53,6 +55,8 @@ function App() {
       { solutions.classic_word === null && <div><div className="spinner-border m-5" role="status"/> <p>If page is loading too long, please try to refresh the page.</p></div> }
       { solutions.classic_word !== null && gameType==="classic" && <Game solutions={ solutions } gameType="classic" /> }
       { solutions.challenge_word !== null && gameType==="challenge" && <Game solutions={ solutions }  gameType="challenge"/> }
+      <ModalForm setLoggedUser={setLoggedUser}/>
+      <ModalProfile userData={loggedUser}/>
     </div>
   );
 }

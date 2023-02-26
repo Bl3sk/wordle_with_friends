@@ -2,7 +2,6 @@ import Keyboard from "./Keyboard";
 import Board from "./Board";
 import Toast from "./Toast";
 import ResultModal from "./ModalResult";
-import RegistrationModal from "./ModalLogin";
 import useGame from "../hooks/useGame";
 import { useEffect, createContext } from "react";
 
@@ -22,7 +21,6 @@ function Game( { solutions, gameType } ) {
         <Keyboard handleKeyClick={ handleKeyClick }/>
       </GameContext.Provider>
       <Toast message={ messageToast }></Toast>
-      <RegistrationModal/>
     </div>
   );
 }
