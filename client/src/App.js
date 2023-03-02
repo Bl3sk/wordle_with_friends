@@ -20,7 +20,7 @@ function App() {
             <div className="material-icons">menu</div>
           </button>
           <ul className="dropdown-menu">
-            <li><a className="dropdown-item" href="/#"><i className="bi bi-person-fill"></i> Profil</a></li>
+            <li><a className="dropdown-item" href="/#" onClick={() => {new bootstrap.Modal(document.getElementById('profileModal')).show();}}><i className="bi bi-person-fill"></i> Profile</a></li>
             <li><a className="dropdown-item" href="/#"><i className="bi bi-trophy-fill"></i> Leaderboards</a></li>
             <li><a className="dropdown-item" href="/#"><i className="bi bi-gear-fill"></i> Settings</a></li>
             <div className="dropdown-divider"></div>
@@ -29,23 +29,20 @@ function App() {
           </ul>
         </div>
         <div className="header-title">Wordle with friends</div>
-        { !loggedUser &&  <div>
-          <button type="button" 
-            className="btn text-white p-1" 
-            onClick={() => {
-              const myModal = new bootstrap.Modal(document.getElementById('registrationModal'));
-              myModal.show();}}>
+        { !loggedUser &&  
+        <div>
+          <button type="button" className="btn text-white p-1" onClick={() => {new bootstrap.Modal(document.getElementById('registrationModal')).show();}}>
             Login / Register
           </button>
         </div> }
-        { loggedUser &&  <div>
-          <button type="button" 
-            className="btn text-white p-1" 
-            onClick={() => {
-              const myModal = new bootstrap.Modal(document.getElementById('profileModal'));
-              myModal.show();}}>
-            { loggedUser.nickname }
-          </button>
+        { loggedUser &&  
+        <div>
+            <button type="button" className="btn text-white p-1" onClick={() => {new bootstrap.Modal(document.getElementById('profileModal')).show();}}>
+                  <div className="user-preview">
+                    <img src={process.env.PUBLIC_URL + "/wordle_icon.jpg"} alt="Avatar"/>
+                    <span>{loggedUser.nickname}</span>
+                </div>
+            </button>
         </div> }
       </header>
       <hr/>

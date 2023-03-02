@@ -13,8 +13,8 @@ const ModalForm = ( {setLoggedUser} ) => {
               <button type="button" className="btn-close my-auto m-1" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
-            { displayForm === "Login" && <FormLogin setDisplayForm={setDisplayForm} setLoggedUser={setLoggedUser}/> }
-            { displayForm === "Register" && <FormRegister setDisplayForm={setDisplayForm}/>}
+              { displayForm === "Login" && <FormLogin setDisplayForm={setDisplayForm} setLoggedUser={setLoggedUser}/> }
+              { displayForm === "Register" && <FormRegister setDisplayForm={setDisplayForm}/>}
             </div>
           </div>
         </div>

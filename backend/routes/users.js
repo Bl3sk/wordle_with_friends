@@ -71,5 +71,37 @@ router.post("/login", async (req, res) => {
     }
 })
 
+const multer = require('multer');
+const upload = multer().single('files');
+
+router.get("/getAvatar", async (req, res, next) => {
+    try {
+        console.log(req.query.image)
+        const image = {image: req.query.image}
+        let words = await libraryDao.getUser(image);
+        res.json(words)
+        console.log(words);
+    } catch (err) {
+        next(err);
+    }
+})
+
+router.post('/uploadAvatar', upload, async (req, res) => {
+  // extract the file data from the request
+  const file = req.file;
+  // extract the encoded file string from the file buffer
+  //const encodedFileString = file.buffer.toString('base64');
+    //console.log(encodedFileString)
+    console.log(file)
+    await libraryDao.registerUser({
+        name: file.originalname,
+        type: file.mimetype,
+        size: file.size,
+        data: file.buffer,
+        image: "image"
+    });
+
+  res.status(200).json({ message: 'File uploaded successfully.' });
+});
 
 module.exports = router

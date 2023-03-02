@@ -7,9 +7,9 @@ body, html {
   background: rgb(26 115 232);
   color: whitesmoke;
   font-family: Verdana, sans-serif;
+  overflow-x: hidden;
 }
 body {
-  position: fixed;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -34,6 +34,22 @@ header, .modalHeader {
   flex-direction: row;
   justify-content: space-between;
 }
+header .user-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0rem;
+  padding: 0.3rem;
+  border-radius: 5%;
+  box-shadow: 0 0 5px rgba(0.5, 0.5, 0.5, 0.5);
+}
+header .user-preview img {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+header .user-preview span {
+  font-size: 1.3rem;
+}
 header div:nth-child(1) {
   display: flex;
   justify-content: flex-start;
@@ -55,7 +71,7 @@ header .material-icons {
 }
 .header-title {
   align-items: center;
-  font-size: min(max(16px, 1.7vw), 5vw);
+  font-size: min(max(16px, 2.1vw), 5vw);
   color: beige;
   display: flex;
   justify-content: center;
@@ -93,7 +109,6 @@ hr {
 
 /*       Board     */
 .row {
-  position: relative;
   z-index: -1;
   text-align: center;
   display: flex;
@@ -237,6 +252,22 @@ form > label {
 .button-sec {
   font-size: 0.9rem;
   padding: 5px;
+}
+
+/*       Modal Profil     */
+.user-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.5rem;
+}
+.user-preview img {
+  width: 4rem;
+  height: 4rem;
+  margin-right: 0.1rem;
+}
+.user-preview span {
+  font-size: 2rem;
 }
 
 /*       Animations     */
