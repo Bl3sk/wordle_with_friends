@@ -44,11 +44,11 @@ header .user-preview {
   box-shadow: 0 0 5px rgba(0.5, 0.5, 0.5, 0.5);
 }
 header .user-preview img {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.1rem;
+  height: 2.1rem;
 }
 header .user-preview span {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
 }
 header div:nth-child(1) {
   display: flex;
@@ -88,6 +88,7 @@ hr {
 }
 /*       Challenge - Classic swap     */
 .chall, .classic {
+  font-size: 1rem;
   box-sizing: content-box;
   width: 5.2em;
   height: 1.5em;
@@ -179,13 +180,14 @@ hr {
   gap: 0.2em;
 }
 .key {
+  color: white;
   grid-column: span 2;
   font-size: 1.5em;
   width: 100%;
   border: 1px solid black;
   border-radius: 10%;
   text-transform: uppercase;
-  background-color: rgb(190, 188, 185);
+  background-color: #818384;
   height: 3rem;
 }
 .key:hover {
@@ -259,16 +261,38 @@ form > label {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0.5rem;
 }
 .user-preview img {
-  width: 4rem;
-  height: 4rem;
+  width: 3.2rem;
+  height: 3.2rem;
   margin-right: 0.1rem;
 }
 .user-preview span {
-  font-size: 2rem;
+  font-size: 1.7rem;
 }
+.editForm {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.filepond--wrapper {
+  width: calc(50% - 0.5em);
+}
+.filepond--file-status {
+  display: block;
+}
+.filepond--file-status {
+  width: 70%;
+}
+.filepond--wrapper .filepond--file-status-main,
+.filepond--wrapper .filepond--file-status-sub {
+  margin-right: 1.5rem !important;
+}
+
+.filepond--credits, .filepond--panel-root, .filepond--file-info-main {
+  display: none;
+}
+
 
 /*       Animations     */
 @keyframes flip {

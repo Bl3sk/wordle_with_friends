@@ -45,7 +45,7 @@ const FormLogin = ( {setDisplayForm, setLoggedUser} ) => {
                     (e) => {setLoginData({...loginData, nickname: e.target.value})
                     }}  
                      id="floatingText" placeholder="Alex" autoComplete="on"/>
-                  <label htmlFor="floatingInput">Nickname</label>
+                  <label htmlFor="floatingText">Nickname</label>
                 </div>
               </div>
               <div className="form-container w-100">

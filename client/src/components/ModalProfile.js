@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { axiosInstance } from '../config/config'
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
@@ -18,46 +18,40 @@ registerPlugin(
   FilePondPluginFileValidateType,
   FilePondPluginFileValidateSize
 );
-const ModalProfile = ( { userData } ) => {
-    const [avatarImage, setAvatarImage] = useState(null);
-
-    console.log("avatar", avatarImage)
-
-    useEffect(() => {
-      if (avatarImage) {
-        var image = new Image();
-        image.src = avatarImage;
-        const divEl = document.getElementById("imagediv")
-        divEl.appendChild(image);
-      } 
-    }, [avatarImage]);
-
-   useEffect(() => {
-      const todayDate = "image"; // replace with the date or identifier for the image you want to retrieve
-      axiosInstance({
-        url: `/users/getAvatar?image=${todayDate}`,
-        method: "GET",
-        data: "image"
-    })
-        .then((response) => {
-          const data = response.data;
-          console.log("res", data)
-          const imageUrl = `data:${data.type};base64,${data.data}`;
-          setImageURL(imageUrl);
+const ModalProfile = ( { loggedUser, setLoggedUser } ) => {
+    const [avatarImage, setAvatarImage] = useState("");
+    const pond = useRef(null);
+    console.log("avatarImage", avatarImage)
+    console.log("User", loggedUser)
+    console.log("userAvatar",loggedUser.avatar)
+    function updateUser() {
+        axiosInstance({
+            url: `/users?userId=${loggedUser.id}`,
+            method: "GET"
         })
-        .catch((error) => {
-          console.log("An error occurred while fetching the image:", error);
-        });
-    }, []);
-    const [imageURL, setImageURL] = useState('');
-    console.log("imageURL", imageURL)
-  //server="http://localhost:8080/users/uploadAvatar"
-  //getBase64String(files[0].file)
-  /*onupdatefiles={(files) => {
-    const result = getBase64String(files[0].file)
-    console.log("result", result)
-    setAvatarImage(result);
-  }}*/
+        .then((data) => {
+            console.log("Získana data: ", data)
+            if(!data.data) {
+                console.log("Nedostali jsme žádná data.")
+                return
+            } 
+            setTimeout(() => {
+              setLoggedUser({...loggedUser, 
+                nickname: data.data.nickname,
+                avatar: data.data.avatar
+                              })
+              pond.current.removeFiles();
+            },3000)
+            setTimeout(() => {
+              pond.current.removeFiles();
+            },3100)
+        })
+        .catch(err => {
+            console.log("Během získávání uživatele se něco pokazilo.", err)
+        })
+    }
+  
+
     return ( 
       <div className="modal fade text-dark" id="profileModal" aria-labelledby="profileModalLabel" aria-hidden="true">
         <div className="modal-dialog">
@@ -68,34 +62,59 @@ const ModalProfile = ( { userData } ) => {
             </div>
             <div className="modal-body">
                 <div className="user-preview">
-                  <img src={process.env.PUBLIC_URL + "/wordle_icon.jpg"} alt="Avatar"/>
-                  <span>{userData.nickname}</span>
+                  <img src={loggedUser.avatar ? `data:${loggedUser.avatar.type};base64,${loggedUser.avatar.data}` : process.env.PUBLIC_URL + "/wordle_icon.jpg"} alt="Avatar" />
+                  <span>{loggedUser.nickname}</span> 
+                </div>   
+                <a href="#edit" data-bs-toggle="collapse">Edit profile</a>  
+                <div id="edit" className="collapse">
+                  <div className="editForm">
+                    <FilePond ref={pond}
+                        name="files"
+                        files={avatarImage && avatarImage}
+                        onupdatefiles={async (files) => {
+                          setAvatarImage({
+                            avatar: files[0].file});
+                        }}
+                        acceptedFileTypes={['image/png', 'image/jpeg']}
+                        maxFileSize= {5 * 1024 * 1024}
+                        server={{
+                          url: 'http://localhost:8080/users/updateUser',
+                          process: {
+                            url: '/',
+                            method: 'PUT',
+                            ondata: (formData) => {
+                              formData.append('userId', loggedUser.id);
+                              return formData;
+                            },
+                            onload: (response) => {
+                              updateUser()
+                              /*setTimeout(() => {
+                                //handleUploadSuccess();
+                                setNewAvatar(true)
+                              }, 6000)*/
+                            }
+                          }
+                        }}
+                        allowFileEncode={false}
+                        allowImagePreview={true}
+                        allowMultiple={false}
+                        allowImageTransform={true}
+                        imageResizeTargetWidth={30}
+                        imageResizeTargetHeight={30}
+                        imageCropAspectRatio={'1:1'}
+                        imagePreviewHeight={100}
+                        labelIdle='<span class="filepond--label-action">Change Avatar</span>'
+                      /> 
+                       <div className="form-floating form-container">
+                          <input type="text" className="form-control"
+                            id="floatingEditNick" placeholder="Alex" autoComplete="on"/>
+                          <label htmlFor="floatingEditNick">New nickname</label>
+                        </div>     
+                  </div> 
+                  <button>Confirm changes</button>
                 </div>
-                <div className="App">
-                  <FilePond
-                    files={avatarImage && avatarImage}
-                    onupdatefiles={async (files) => {
-                      //const base64String = await getBase64String(files[0].file)
-                      //console.log("result", base64String)
-                      setAvatarImage(files[0].file);
-                    }}
-                    allowFileEncode={false}
-                    allowImagePreview={true}
-                    allowMultiple={false}
-                    acceptedFileTypes={['image/png', 'image/jpeg']}
-                    maxFileSize= {2 * 1024 * 1024}
-                    server="http://localhost:8080/users/uploadAvatar"
-                    allowImageTransform={true}
-                    imageResizeTargetWidth={30}
-                    imageResizeTargetHeight={30}
-                    imageCropAspectRatio={'1:1'}
-                    imagePreviewHeight={100}
-                    name="files"
-                    labelIdle='Drag & Drop your avatar or <span class="filepond--label-action">Browse</span>'
-                  />
-                  <div id="imagediv"></div>
-                  {imageURL && <img src={imageURL} alt="hovno" />}
-              </div>
+                <hr></hr>
+                  <p>Nějaký content</p>       
             </div>
             <div className="bg-primary bg-gradient text-white p-2">
             nevim

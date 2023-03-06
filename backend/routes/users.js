@@ -3,6 +3,7 @@ const libraryDao = require("../dao/library-dao");
 const router = express.Router()
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
+const ObjectId = require('mongodb').ObjectID;
 
 function createToken (id) {
     return jwt.sign({id}, "testString", { expiresIn: "7d" })
@@ -47,7 +48,7 @@ router.post("/login", async (req, res) => {
     console.log("inputData", inputData)
     try {
         const user = await libraryDao.getUser({nickname: inputData.nickname});
-        console.log(user)
+        console.log("uživatel v loginu ", user)
         if (await bcrypt.compare(inputData.password, user.password)) {
             console.log("první IF")
             const token = createToken(user._id);
@@ -55,6 +56,8 @@ router.post("/login", async (req, res) => {
                 msg: "Uživatel přihlášen.", 
                 data: {
                     nickname: user.nickname,
+                    id: user._id,
+                    avatar: user.avatar,
                     jwt_token: token
                 }
             });
@@ -71,37 +74,38 @@ router.post("/login", async (req, res) => {
     }
 })
 
-const multer = require('multer');
-const upload = multer().single('files');
 
-router.get("/getAvatar", async (req, res, next) => {
+
+router.get("/", async (req, res, next) => {
     try {
-        console.log(req.query.image)
-        const image = {image: req.query.image}
-        let words = await libraryDao.getUser(image);
-        res.json(words)
-        console.log(words);
+        console.log(req.query.userId)
+        const userId = { _id: ObjectId(req.query.userId)}
+        let user = await libraryDao.getUser(userId);
+        res.json(user)
+        console.log(user);
     } catch (err) {
         next(err);
     }
 })
 
-router.post('/uploadAvatar', upload, async (req, res) => {
-  // extract the file data from the request
-  const file = req.file;
-  // extract the encoded file string from the file buffer
-  //const encodedFileString = file.buffer.toString('base64');
-    //console.log(encodedFileString)
-    console.log(file)
-    await libraryDao.registerUser({
-        name: file.originalname,
-        type: file.mimetype,
-        size: file.size,
-        data: file.buffer,
-        image: "image"
-    });
+const multer = require('multer');
+const upload = multer().single('files');
 
-  res.status(200).json({ message: 'File uploaded successfully.' });
+router.put('/updateUser', upload, async (req, res) => {
+    const file = req.file;
+    const inputData = req.body;
+    console.log("inputData", inputData)
+    console.log(req.file)
+    await libraryDao.updateUser({
+        id: inputData.userId,
+        image: {
+            name: file.originalname,
+            type: file.mimetype,
+            size: file.size,
+            data: file.buffer
+        }
+    });
+  res.status(200).json({ message: 'User updated.' });
 });
 
 module.exports = router

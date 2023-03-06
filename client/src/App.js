@@ -20,12 +20,34 @@ function App() {
             <div className="material-icons">menu</div>
           </button>
           <ul className="dropdown-menu">
-            <li><a className="dropdown-item" href="/#" onClick={() => {new bootstrap.Modal(document.getElementById('profileModal')).show();}}><i className="bi bi-person-fill"></i> Profile</a></li>
-            <li><a className="dropdown-item" href="/#"><i className="bi bi-trophy-fill"></i> Leaderboards</a></li>
-            <li><a className="dropdown-item" href="/#"><i className="bi bi-gear-fill"></i> Settings</a></li>
+            {loggedUser && 
+            <li>
+              <a className="dropdown-item" href="/#" onClick={() => {new bootstrap.Modal(document.getElementById('profileModal')).show();}}>
+                <i className="bi bi-person-fill"></i> Profile
+              </a>
+            </li>}
+            <li>
+              <a className="dropdown-item" href="/#">
+                <i className="bi bi-trophy-fill"></i> Leaderboards
+              </a>
+            </li>
+            <li>
+              <a className="dropdown-item" href="/#">
+                <i className="bi bi-gear-fill"></i> Settings
+              </a>
+            </li>
             <div className="dropdown-divider"></div>
-            <li><a className="dropdown-item" href="/#"><i className="bi bi-info-circle-fill"></i> About game</a></li>
-            {loggedUser && <li><a className="dropdown-item" href="/#" onClick={() => {setLoggedUser("")}}><i className="bi bi-box-arrow-in-right"></i> Log out</a></li>}
+            <li>
+              <a className="dropdown-item" href="/#">
+                <i className="bi bi-info-circle-fill"></i> About game
+              </a>
+            </li>
+        {loggedUser && 
+            <li>
+              <a className="dropdown-item" href="/#" onClick={() => {setLoggedUser("")}}>
+                <i className="bi bi-box-arrow-in-right"></i> Log out
+              </a>
+            </li>}
           </ul>
         </div>
         <div className="header-title">Wordle with friends</div>
@@ -39,7 +61,7 @@ function App() {
         <div>
             <button type="button" className="btn text-white p-1" onClick={() => {new bootstrap.Modal(document.getElementById('profileModal')).show();}}>
                   <div className="user-preview">
-                    <img src={process.env.PUBLIC_URL + "/wordle_icon.jpg"} alt="Avatar"/>
+                    <img src={loggedUser.avatar ? `data:${loggedUser.avatar.type};base64,${loggedUser.avatar.data}` : process.env.PUBLIC_URL + "/wordle_icon.jpg"} alt="Avatar" />
                     <span>{loggedUser.nickname}</span>
                 </div>
             </button>
@@ -53,7 +75,7 @@ function App() {
       { solutions.classic_word !== null && gameType==="classic" && <Game solutions={ solutions } gameType="classic" /> }
       { solutions.challenge_word !== null && gameType==="challenge" && <Game solutions={ solutions }  gameType="challenge"/> }
       <ModalForm setLoggedUser={setLoggedUser}/>
-      <ModalProfile userData={loggedUser}/>
+      <ModalProfile loggedUser={loggedUser} setLoggedUser={setLoggedUser}/>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use strict";
 const DbConnection = require("../db/db-connection");
+const ObjectId = require('mongodb').ObjectID;
 require("dotenv").config()
 
 // connection string for locally running MongoDB
@@ -84,12 +85,12 @@ class LibraryDao {
         }
     }
     // update a book in the collection
-    async updateBook(codeText) {
-        let filter = { codeText };
+    async updateUser(user) {
+        console.log("user DATA:", user)
         let db = await DbConnection.get(connectionString);
         let status = await db
-            .collection(this.wordsCollection)
-            .updateOne( { code: codeText }, { $set: { name: "hovnoo" } } )
+            .collection(this.usersCollection)
+            .updateOne( { _id: ObjectId(user) }, { $set: { avatar: user.image } } )
         console.log(status)
         if (!status || !status.acknowledged) {
             throw new Error("Unexpected Error");
