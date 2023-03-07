@@ -178,6 +178,8 @@ hr {
   place-items: center;
   grid-template-columns: repeat(20, minmax(auto, 1.45em));
   gap: 0.2em;
+  padding: 5px;
+  margin-top: -10px;
 }
 .key {
   color: white;

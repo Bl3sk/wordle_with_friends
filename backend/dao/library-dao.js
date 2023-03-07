@@ -12,13 +12,13 @@ class LibraryDao {
         this.usersCollection = "users"
         DbConnection.init(connectionString);
  }
-    // returns book or null
     async getWords(date) {
         let db = await DbConnection.get(connectionString);
         return await db
             .collection(this.wordsCollection)
             .findOne({ date: date })
     }
+
     async getUser(user) {
         console.log(user)
         let db = await DbConnection.get(connectionString);
@@ -84,13 +84,13 @@ class LibraryDao {
             throw new Error("Unexpected Error");
         }
     }
-    // update a book in the collection
+    // update
     async updateUser(user) {
         console.log("user DATA:", user)
         let db = await DbConnection.get(connectionString);
         let status = await db
             .collection(this.usersCollection)
-            .updateOne( { _id: ObjectId(user) }, { $set: { avatar: user.image } } )
+            .updateOne( { _id: ObjectId(user) }, { $set: { avatar: user.avatar } } )
         console.log(status)
         if (!status || !status.acknowledged) {
             throw new Error("Unexpected Error");

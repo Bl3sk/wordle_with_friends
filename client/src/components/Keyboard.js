@@ -22,7 +22,6 @@ const Keyboard = ({ handleKeyClick }) => {
           </button>
         ))}
       <div className="space"></div>
-      
       <button type="button" data-key="enter" className={"key"} onClick={ (event => handleKeyClick(event)) }>
         <i className="bi bi-arrow-return-right" style={{fontSize: "1.5rem"}}></i>
       </button>

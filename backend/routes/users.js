@@ -31,7 +31,7 @@ router.post("/register", async (req, res) => {
                 email: newUser.email,
                 password: hash
             });
-            res.status(200).json({
+            res.json({
                 msg: "Data uložena.", 
                 data: newUser
             })
@@ -52,7 +52,7 @@ router.post("/login", async (req, res) => {
         if (await bcrypt.compare(inputData.password, user.password)) {
             console.log("první IF")
             const token = createToken(user._id);
-            res.status(200).json({
+            res.json({
                 msg: "Uživatel přihlášen.", 
                 data: {
                     nickname: user.nickname,
@@ -74,8 +74,6 @@ router.post("/login", async (req, res) => {
     }
 })
 
-
-
 router.get("/", async (req, res, next) => {
     try {
         console.log(req.query.userId)
@@ -90,7 +88,6 @@ router.get("/", async (req, res, next) => {
 
 const multer = require('multer');
 const upload = multer().single('files');
-
 router.put('/updateUser', upload, async (req, res) => {
     const file = req.file;
     const inputData = req.body;
@@ -98,14 +95,27 @@ router.put('/updateUser', upload, async (req, res) => {
     console.log(req.file)
     await libraryDao.updateUser({
         id: inputData.userId,
-        image: {
+        avatar: {
             name: file.originalname,
             type: file.mimetype,
             size: file.size,
             data: file.buffer
         }
     });
-  res.status(200).json({ message: 'User updated.' });
+  res.json({ message: "User updated." });
 });
+
+router.delete("/deleteAvatar", async (req, res, next) => {
+    try {
+        console.log(req.query)
+        await libraryDao.updateUser({
+            id: req.query.userId,
+            avatar: ""
+        });
+        res.json({ message: "Avatar deleted." });
+    } catch (err) {
+        next(err);
+    }
+})
 
 module.exports = router

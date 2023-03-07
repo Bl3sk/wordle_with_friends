@@ -4,7 +4,6 @@ import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop'
 import FilePondPluginImageTransform from 'filepond-plugin-image-transform'
-import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
@@ -14,19 +13,18 @@ registerPlugin(
   FilePondPluginImagePreview,
   FilePondPluginImageCrop,
   FilePondPluginImageTransform,
-  FilePondPluginImageResize,
   FilePondPluginFileValidateType,
   FilePondPluginFileValidateSize
 );
 const ModalProfile = ( { loggedUser, setLoggedUser } ) => {
-    const [avatarImage, setAvatarImage] = useState("");
+    const [avatarImage, setAvatarImage] = useState();
     const pond = useRef(null);
     console.log("avatarImage", avatarImage)
     console.log("User", loggedUser)
     console.log("userAvatar",loggedUser.avatar)
-    function updateUser() {
+    function updateLoggedUser() {
         axiosInstance({
-            url: `/users?userId=${loggedUser.id}`,
+            url: `users?userId=${loggedUser.id}`,
             method: "GET"
         })
         .then((data) => {
@@ -34,17 +32,12 @@ const ModalProfile = ( { loggedUser, setLoggedUser } ) => {
             if(!data.data) {
                 console.log("Nedostali jsme žádná data.")
                 return
-            } 
-            setTimeout(() => {
+            } else {
               setLoggedUser({...loggedUser, 
                 nickname: data.data.nickname,
                 avatar: data.data.avatar
-                              })
-              pond.current.removeFiles();
-            },3000)
-            setTimeout(() => {
-              pond.current.removeFiles();
-            },3100)
+              })
+            }
         })
         .catch(err => {
             console.log("Během získávání uživatele se něco pokazilo.", err)
@@ -70,28 +63,40 @@ const ModalProfile = ( { loggedUser, setLoggedUser } ) => {
                   <div className="editForm">
                     <FilePond ref={pond}
                         name="files"
-                        files={avatarImage && avatarImage}
+                        files={avatarImage}
                         onupdatefiles={async (files) => {
+                          if (!avatarImage) return
                           setAvatarImage({
                             avatar: files[0].file});
-                        }}
+                        }
+                      }
                         acceptedFileTypes={['image/png', 'image/jpeg']}
                         maxFileSize= {5 * 1024 * 1024}
                         server={{
-                          url: 'http://localhost:8080/users/updateUser',
+                          url: axiosInstance.defaults.baseURL,
                           process: {
-                            url: '/',
+                            url: '/users/updateUser',
                             method: 'PUT',
                             ondata: (formData) => {
-                              formData.append('userId', loggedUser.id);
+                              console.log("fooormDATAAA", formData)
+                              formData.append("userId", loggedUser.id);
                               return formData;
                             },
-                            onload: (response) => {
-                              updateUser()
-                              /*setTimeout(() => {
-                                //handleUploadSuccess();
-                                setNewAvatar(true)
-                              }, 6000)*/
+                            onload: async (response) => {
+                              const msg = JSON.parse(response).message
+                              if(msg === "User updated.") {
+                                setAvatarImage()
+                                updateLoggedUser()
+                              }
+                            }
+                          },
+                          revert: {
+                            url: `/users/deleteAvatar?userId=${loggedUser.id}`,
+                            onload: async (response) => {
+                              const msg = JSON.parse(response).message
+                              if(msg === "Avatar deleted.") {
+                                updateLoggedUser()
+                              }
                             }
                           }
                         }}
@@ -99,8 +104,6 @@ const ModalProfile = ( { loggedUser, setLoggedUser } ) => {
                         allowImagePreview={true}
                         allowMultiple={false}
                         allowImageTransform={true}
-                        imageResizeTargetWidth={30}
-                        imageResizeTargetHeight={30}
                         imageCropAspectRatio={'1:1'}
                         imagePreviewHeight={100}
                         labelIdle='<span class="filepond--label-action">Change Avatar</span>'
