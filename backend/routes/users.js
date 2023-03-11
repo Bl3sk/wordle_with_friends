@@ -17,7 +17,7 @@ router.post("/register", async (req, res) => {
     try {
         if (nicknameExist || emailExist) {
             res.status(409).json({
-                msg: "Uživatel existuje",
+                msg: "User exists",
                 data: {
                     nicknameExist: nicknameExist,
                     emailExist: emailExist
@@ -32,7 +32,7 @@ router.post("/register", async (req, res) => {
                 password: hash
             });
             res.json({
-                msg: "Data uložena.", 
+                msg: "Data saved.", 
                 data: newUser
             })
         }
@@ -53,7 +53,7 @@ router.post("/login", async (req, res) => {
             console.log("první IF")
             const token = createToken(user._id);
             res.json({
-                msg: "Uživatel přihlášen.", 
+                msg: "User successfully logged in.", 
                 data: {
                     nickname: user.nickname,
                     id: user._id,
@@ -63,7 +63,7 @@ router.post("/login", async (req, res) => {
             });
         } else {
             res.status(400).json({
-                msg: "Zadané nesprávné přihlašovací údaje."
+                msg: "Incorrect login data."
             })
         }
     } catch (err) {
@@ -88,24 +88,31 @@ router.get("/", async (req, res, next) => {
 
 const multer = require('multer');
 const upload = multer().single('files');
+
 router.put('/updateUser', upload, async (req, res) => {
+  try {
     const file = req.file;
     const inputData = req.body;
     console.log("inputData", inputData)
     console.log(req.file)
     await libraryDao.updateUser({
-        id: inputData.userId,
-        avatar: {
-            name: file.originalname,
-            type: file.mimetype,
-            size: file.size,
-            data: file.buffer
-        }
+      id: inputData.userId,
+      avatar: {
+        name: file.originalname,
+        type: file.mimetype,
+        size: file.size,
+        data: file.buffer
+      }
     });
-  res.json({ message: "User updated." });
+    res.json({ message: "User updated." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error while updating user." });
+  }
 });
 
-router.delete("/deleteAvatar", async (req, res, next) => {
+
+router.delete("/deleteAvatar", async (req, res) => {
     try {
         console.log(req.query)
         await libraryDao.updateUser({
@@ -114,7 +121,7 @@ router.delete("/deleteAvatar", async (req, res, next) => {
         });
         res.json({ message: "Avatar deleted." });
     } catch (err) {
-        next(err);
+        res.status(500).json({ message: "Error while deleting avatar." });
     }
 })
 

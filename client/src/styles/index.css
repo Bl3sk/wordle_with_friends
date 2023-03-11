@@ -20,7 +20,7 @@ body {
 }
 
 button { cursor: pointer; }
-svg { pointer-events: none; }
+svg, i { pointer-events: none; }
 
 .game, .game, #root {
   height: 100%;
@@ -263,6 +263,7 @@ form > label {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 0.5rem;
 }
 .user-preview img {
   width: 3.2rem;
@@ -272,13 +273,27 @@ form > label {
 .user-preview span {
   font-size: 1.7rem;
 }
-.editForm {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+.user-preview .dropdown-center {
+  align-self: self-start;
+}
+#editNickname, #editAvatar, #editPassword {
+  position: relative;
+}
+#editNickname div, #editAvatar div, #editPassword div {
+  margin: auto;
+}
+.btn-hide {
+  position: absolute;
+  top: 0;
+  right: 0;
+  pointer-events: all;
+}
+.filepond--label-action, .filepond--drop-label span {
+  cursor: pointer;
 }
 .filepond--wrapper {
   width: calc(50% - 0.5em);
+  cursor: pointer;
 }
 .filepond--file-status {
   display: block;
@@ -286,11 +301,6 @@ form > label {
 .filepond--file-status {
   width: 70%;
 }
-.filepond--wrapper .filepond--file-status-main,
-.filepond--wrapper .filepond--file-status-sub {
-  margin-right: 1.5rem !important;
-}
-
 .filepond--credits, .filepond--panel-root, .filepond--file-info-main {
   display: none;
 }

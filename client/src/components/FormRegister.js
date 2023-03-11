@@ -46,8 +46,8 @@ const FormRegister = ( {setDisplayForm} ) => {
       })
     }
     const checkValidationNickname = useCallback(() => {
-      if (registerData.nickname.length >= 3 && registerData.nickname.length <= 10) return "valid"
-      if (registerData.nickname.length < 3 || registerData.nickname.length > 10) return "invalid"     
+      if (registerData.nickname.length >= 3 && registerData.nickname.length <= 12) return "valid"
+      if (registerData.nickname.length < 3 || registerData.nickname.length > 12) return "invalid"     
     }, [registerData.nickname]);
 
     const checkValidationEmail = useCallback(() => {
@@ -58,8 +58,8 @@ const FormRegister = ( {setDisplayForm} ) => {
     }, [registerData.email]);
 
     const checkValidationPassword = useCallback(() => {
-      if (registerData.password.length >= 6 && registerData.password.length <= 15) return "valid" 
-      if (registerData.password.length < 6 || registerData.password.length > 15) return "invalid"
+      if (registerData.password.length >= 6 && registerData.password.length <= 30) return "valid" 
+      if (registerData.password.length < 6 || registerData.password.length > 30) return "invalid"
     }, [registerData.password]);
 
     const checkValidationRepeatedPassword = useCallback(() => {
@@ -143,7 +143,7 @@ const FormRegister = ( {setDisplayForm} ) => {
                   id="floatingNick" placeholder="Your nickname" required/>
                   <label htmlFor="floatingNick">Nickname</label>
                   <div className="invalid-feedback">
-                    {alreadyUsed.usedNicknames.includes(registerData.nickname) ? "This nickname is already in use!" :"Must be 3-10 characters long!"}
+                    {alreadyUsed.usedNicknames.includes(registerData.nickname) ? "This nickname is already in use!" :"Must be 3-12 characters long!"}
                   </div>
                 </div>
               </div>
@@ -171,7 +171,7 @@ const FormRegister = ( {setDisplayForm} ) => {
                     id="floatingPassword" placeholder="Password" autoComplete="on" required/>
                   <label htmlFor="floatingPassword">Password</label>
                   <div className="invalid-feedback">
-                    Must be 6-15 characters long!
+                    Must be 6-30 characters long!
                   </div>
                 </div>
               </div>

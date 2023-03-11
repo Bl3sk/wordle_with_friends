@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { axiosInstance } from '../config/config'
 import jwtDecode  from 'jwt-decode'
 
 function useAuthContext() {
@@ -28,9 +29,29 @@ function useAuthContext() {
         if (user) localStorage.setItem("user", user)
     }, [loggedUser])
     
-   
+    function updateLoggedUser() {
+      axiosInstance({
+          url: `users?userId=${loggedUser.id}`,
+          method: "GET"
+      })
+      .then((data) => {
+          console.log("Získana data: ", data)
+          if(!data.data) {
+              console.log("Nedostali jsme žádná data.")
+              return
+          } else {
+            setLoggedUser({...loggedUser, 
+              nickname: data.data.nickname,
+              avatar: data.data.avatar
+            })
+          }
+      })
+      .catch(err => {
+          console.log("Během získávání uživatele se něco pokazilo.", err)
+      })
+  }
   return (
-    { loggedUser, setLoggedUser }
+    { loggedUser, setLoggedUser, updateLoggedUser }
   )
 }
 

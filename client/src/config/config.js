@@ -4,7 +4,7 @@ let url;
 if (process.env.NODE_ENV === "production") {
     url = "https://wordlewithfriendsbackend.onrender.com"
 } else {
-    url = "http://localhost:8080/"
+    url = "http://localhost:8080"
 }
 
 

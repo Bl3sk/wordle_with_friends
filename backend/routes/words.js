@@ -33,16 +33,4 @@ router.post("/", async (req, res) => {
     })
 })
 
-router.patch("/", async (req, res) => {
-    let book = await libraryDao.updateBook("ltlp");
-    res.json(book)
-})
-
-router.delete("/", async (req, res) => {
-    await libraryDao.deleteBook("ltlp");
-})
-
-
-
-
 module.exports = router

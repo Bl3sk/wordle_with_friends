@@ -16,35 +16,25 @@ registerPlugin(
   FilePondPluginFileValidateType,
   FilePondPluginFileValidateSize
 );
-const ModalProfile = ( { loggedUser, setLoggedUser } ) => {
+const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
     const [avatarImage, setAvatarImage] = useState();
     const pond = useRef(null);
     console.log("avatarImage", avatarImage)
     console.log("User", loggedUser)
     console.log("userAvatar",loggedUser.avatar)
-    function updateLoggedUser() {
-        axiosInstance({
-            url: `users?userId=${loggedUser.id}`,
-            method: "GET"
-        })
-        .then((data) => {
-            console.log("Získana data: ", data)
-            if(!data.data) {
-                console.log("Nedostali jsme žádná data.")
-                return
-            } else {
-              setLoggedUser({...loggedUser, 
-                nickname: data.data.nickname,
-                avatar: data.data.avatar
-              })
-            }
-        })
-        .catch(err => {
-            console.log("Během získávání uživatele se něco pokazilo.", err)
-        })
-    }
-  
 
+    const dropdownItems = document.querySelectorAll('.edit-option');
+    dropdownItems.forEach(item => {
+      item.addEventListener('click', (event) => {
+        const target = event.target.getAttribute('href');
+        const collapseDivs = document.querySelectorAll('.collapse.show');
+        collapseDivs.forEach(div => {
+          div.classList.remove('show');
+        });
+        const targetDiv = document.querySelector(target);
+        targetDiv.classList.add('show');
+      });
+  });
     return ( 
       <div className="modal fade text-dark" id="profileModal" aria-labelledby="profileModalLabel" aria-hidden="true">
         <div className="modal-dialog">
@@ -57,10 +47,31 @@ const ModalProfile = ( { loggedUser, setLoggedUser } ) => {
                 <div className="user-preview">
                   <img src={loggedUser.avatar ? `data:${loggedUser.avatar.type};base64,${loggedUser.avatar.data}` : process.env.PUBLIC_URL + "/wordle_icon.jpg"} alt="Avatar" />
                   <span>{loggedUser.nickname}</span> 
+                  <div className="dropdown-center">
+                    <a className="dropdown-toggle" href="/#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i className="bi bi-pencil-square"></i>Ediiit
+                    </a>
+                    <ul className="dropdown-menu">
+                      <li><a className="dropdown-item edit-option" href="#editNickname" data-bs-toggle="collapse">Edit nickname</a> </li>
+                      <li><a className="dropdown-item edit-option" href="#editAvatar" data-bs-toggle="collapse">Edit avatar</a></li>
+                      <li><a className="dropdown-item edit-option" href="#editPassword" data-bs-toggle="collapse">Edit password</a></li>
+                    </ul>
+                  </div> 
                 </div>   
-                <a href="#edit" data-bs-toggle="collapse">Edit profile</a>  
-                <div id="edit" className="collapse">
-                  <div className="editForm">
+                <div id="editNickname" className="collapse">
+                    <a className="collapsed" href="#editNickname" data-bs-toggle="collapse"><i className="bi bi-x-circle btn-hide"></i></a>
+                    <div className="form-floating form-container">
+                        <input type="text" className="form-control" id="floatingEditNick" placeholder="Nickname" autoComplete="on"/>
+                        <label htmlFor="floatingEditNick">New nickname</label>
+                    </div>     
+                    <button type="submit" className="btn btn-primary p-1 m-2" value="confirm">Confirm changes</button>
+                </div>
+                <div id="editPassword" className="collapse">
+                  <a className="collapsed" href="#editPassword" data-bs-toggle="collapse"><i className="bi bi-x-circle btn-hide"></i></a>
+                  Nové heslo
+                </div>
+                <div id="editAvatar" className="collapse">
+                    <a className="collapsed" href="#editAvatar" data-bs-toggle="collapse"><i className="bi bi-x-circle btn-hide"></i></a>
                     <FilePond ref={pond}
                         name="files"
                         files={avatarImage}
@@ -70,8 +81,6 @@ const ModalProfile = ( { loggedUser, setLoggedUser } ) => {
                             avatar: files[0].file});
                         }
                       }
-                        acceptedFileTypes={['image/png', 'image/jpeg']}
-                        maxFileSize= {5 * 1024 * 1024}
                         server={{
                           url: axiosInstance.defaults.baseURL,
                           process: {
@@ -100,27 +109,19 @@ const ModalProfile = ( { loggedUser, setLoggedUser } ) => {
                             }
                           }
                         }}
+                        acceptedFileTypes={['image/png', 'image/jpeg']}
+                        maxFileSize= {5 * 1024 * 1024}
                         allowFileEncode={false}
                         allowImagePreview={true}
                         allowMultiple={false}
                         allowImageTransform={true}
                         imageCropAspectRatio={'1:1'}
                         imagePreviewHeight={100}
-                        labelIdle='<span class="filepond--label-action">Change Avatar</span>'
+                        labelIdle='<span className="filepond--label-action">Upload new avatar</span>'
                       /> 
-                       <div className="form-floating form-container">
-                          <input type="text" className="form-control"
-                            id="floatingEditNick" placeholder="Alex" autoComplete="on"/>
-                          <label htmlFor="floatingEditNick">New nickname</label>
-                        </div>     
-                  </div> 
-                  <button>Confirm changes</button>
                 </div>
                 <hr></hr>
                   <p>Nějaký content</p>       
-            </div>
-            <div className="bg-primary bg-gradient text-white p-2">
-            nevim
             </div>
           </div>
         </div>

@@ -9,7 +9,7 @@ import * as bootstrap from 'bootstrap';
 
 function App() {
   const { solutions } = useWords()
-  const { loggedUser, setLoggedUser } = useAuthUser()
+  const { loggedUser, setLoggedUser, updateLoggedUser } = useAuthUser()
   const [gameType, setGameType] = useState("classic")
   console.log(solutions, loggedUser)
   return (
@@ -75,7 +75,7 @@ function App() {
       { solutions.classic_word !== null && gameType==="classic" && <Game solutions={ solutions } gameType="classic" /> }
       { solutions.challenge_word !== null && gameType==="challenge" && <Game solutions={ solutions }  gameType="challenge"/> }
       <ModalForm setLoggedUser={setLoggedUser}/>
-      <ModalProfile loggedUser={loggedUser} setLoggedUser={setLoggedUser}/>
+      <ModalProfile loggedUser={loggedUser} updateLoggedUser={updateLoggedUser}/>
     </div>
   );
 }
