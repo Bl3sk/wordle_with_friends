@@ -49,7 +49,7 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
                   <span>{loggedUser.nickname}</span> 
                   <div className="dropdown-center">
                     <a className="dropdown-toggle" href="/#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i className="bi bi-pencil-square"></i>Ediiit
+                    <i className="bi bi-pencil-square"></i>Edit
                     </a>
                     <ul className="dropdown-menu">
                       <li><a className="dropdown-item edit-option" href="#editNickname" data-bs-toggle="collapse">Edit nickname</a> </li>
@@ -86,6 +86,9 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
                           process: {
                             url: '/users/updateUser',
                             method: 'PUT',
+                            headers: {
+                              'Authorization': 'Bearer ' + loggedUser.jwt_token
+                            },
                             ondata: (formData) => {
                               console.log("fooormDATAAA", formData)
                               formData.append("userId", loggedUser.id);

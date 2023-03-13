@@ -29,7 +29,8 @@ const FormRegister = ( {setDisplayForm} ) => {
       })
       .then((res) => {
         console.log(res.data.msg, res);
-        if (res.data.msg === "Data uložena.") alert('You have been succesfully registered! <br> You can login now.', 'success')
+        console.log(res.status)
+        if (res.status === 200) alert('You have been succesfully registered! <br> You can login now.', 'success')
       })
       .catch((err) => {
         console.log(err.response.data.msg, err);

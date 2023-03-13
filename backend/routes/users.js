@@ -1,13 +1,15 @@
 const express = require("express")
 const libraryDao = require("../dao/library-dao");
+const authenticateToken = require('../middleware/authenticateToken');
 const router = express.Router()
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const ObjectId = require('mongodb').ObjectID;
 
 function createToken (id) {
-    return jwt.sign({id}, "testString", { expiresIn: "7d" })
+    return jwt.sign({id}, process.env.SECRET_STRING, { expiresIn: "7d" })
 }
+
 
 router.post("/register", async (req, res) => {
     const newUser = req.body;
@@ -89,7 +91,7 @@ router.get("/", async (req, res, next) => {
 const multer = require('multer');
 const upload = multer().single('files');
 
-router.put('/updateUser', upload, async (req, res) => {
+router.put('/updateUser', authenticateToken, upload, async (req, res) => {
   try {
     const file = req.file;
     const inputData = req.body;
@@ -112,7 +114,7 @@ router.put('/updateUser', upload, async (req, res) => {
 });
 
 
-router.delete("/deleteAvatar", async (req, res) => {
+router.delete("/deleteAvatar", authenticateToken, async (req, res) => {
     try {
         console.log(req.query)
         await libraryDao.updateUser({
