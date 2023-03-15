@@ -1,7 +1,9 @@
+import useFormValidation from '../hooks/useFormValidation';
 import { axiosInstance } from '../config/config'
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 
 const FormRegister = ( {setDisplayForm} ) => {
+    const { checkValidationNickname, checkValidationEmail, checkValidationPassword, checkValidationRepeatedPassword, showFeedback } = useFormValidation()
     const [registerData, setRegisterData] = useState({
       nickname: "",
       email: "",
@@ -16,10 +18,10 @@ const FormRegister = ( {setDisplayForm} ) => {
       e.preventDefault()
       const alertPlaceholder = document.getElementById('registrationAlert')
       alertPlaceholder.innerHTML = ""
-      const email = checkValidationEmail()
-      const nickname = checkValidationNickname()
-      const psw = checkValidationPassword()
-      const rptPsw = checkValidationRepeatedPassword()
+      const email = checkValidationEmail(registerData.email)
+      const nickname = checkValidationNickname(registerData.nickname)
+      const psw = checkValidationPassword(registerData.password)
+      const rptPsw = checkValidationRepeatedPassword(registerData.password, registerData.repeatedPassword)
       if (email !== "valid" || nickname !== "valid" || psw !== "valid" || rptPsw !== "valid") return
       console.log("Jdeme registrovat:", registerData)
       axiosInstance({
@@ -46,32 +48,6 @@ const FormRegister = ( {setDisplayForm} ) => {
         })
       })
     }
-    const checkValidationNickname = useCallback(() => {
-      if (registerData.nickname.length >= 3 && registerData.nickname.length <= 12) return "valid"
-      if (registerData.nickname.length < 3 || registerData.nickname.length > 12) return "invalid"     
-    }, [registerData.nickname]);
-
-    const checkValidationEmail = useCallback(() => {
-      //eslint-disable-next-line
-      var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-      if (registerData.email.match(mailformat)) return "valid"
-      if (!registerData.email.match(mailformat)) return "invalid"
-    }, [registerData.email]);
-
-    const checkValidationPassword = useCallback(() => {
-      if (registerData.password.length >= 6 && registerData.password.length <= 30) return "valid" 
-      if (registerData.password.length < 6 || registerData.password.length > 30) return "invalid"
-    }, [registerData.password]);
-
-    const checkValidationRepeatedPassword = useCallback(() => {
-      if (registerData.password === registerData.repeatedPassword) return "valid"
-      if (registerData.password !== registerData.repeatedPassword) return "invalid"
-    }, [registerData.password, registerData.repeatedPassword]);
-
-    function showFeedback(el, option) {
-      el.classList.remove("is-valid",  "is-invalid");
-      el.classList.add("is-" + option);
-    };
     
     function alert(message, type) {
       const alertPlaceholder = document.getElementById('registrationAlert')
@@ -95,8 +71,8 @@ const FormRegister = ( {setDisplayForm} ) => {
         showFeedback(input, "invalid") 
         return
       }
-      showFeedback(input, checkValidationNickname())
-    }, [registerData.nickname, alreadyUsed, checkValidationNickname]);
+      showFeedback(input, checkValidationNickname(registerData.nickname))
+    }, [registerData.nickname, alreadyUsed, checkValidationNickname, showFeedback]);
 
     useEffect(() => {
       const input = document.querySelector("#floatingEmail")
@@ -108,8 +84,8 @@ const FormRegister = ( {setDisplayForm} ) => {
         showFeedback(input, "invalid") 
         return
       }
-      showFeedback(input, checkValidationEmail())
-    }, [registerData.email, alreadyUsed, checkValidationEmail]);
+      showFeedback(input, checkValidationEmail(registerData.email))
+    }, [registerData.email, alreadyUsed, checkValidationEmail, showFeedback]);
 
     useEffect(() => {
       const input = document.querySelector("#floatingPassword");
@@ -117,8 +93,8 @@ const FormRegister = ( {setDisplayForm} ) => {
         input.classList.remove("is-valid", "is-invalid");
         return
       } 
-      showFeedback(input, checkValidationPassword())
-    }, [registerData.password, checkValidationPassword]);
+      showFeedback(input, checkValidationPassword(registerData.password))
+    }, [registerData.password, checkValidationPassword, showFeedback]);
 
     useEffect(() => {
       const input = document.querySelector("#floatingPassword2");
@@ -126,8 +102,8 @@ const FormRegister = ( {setDisplayForm} ) => {
         input.classList.remove("is-valid", "is-invalid");
         return
       } 
-      showFeedback(input, checkValidationRepeatedPassword())
-    }, [registerData.repeatedPassword, registerData.password, checkValidationRepeatedPassword]);
+      showFeedback(input, checkValidationRepeatedPassword(registerData.password, registerData.repeatedPassword))
+    }, [registerData.repeatedPassword, registerData.password, checkValidationRepeatedPassword, showFeedback]);
     console.log(alreadyUsed)
     return ( 
         <div>

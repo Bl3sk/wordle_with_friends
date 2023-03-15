@@ -90,7 +90,7 @@ class LibraryDao {
         let db = await DbConnection.get(connectionString);
         let status = await db
             .collection(this.usersCollection)
-            .updateOne( { _id: ObjectId(user) }, { $set: { avatar: user.avatar } } )
+            .updateOne( { _id: ObjectId(user.id) }, { $set: { [user.update.name]: user.update.data } } )
         console.log(status)
         if (!status || !status.acknowledged) {
             throw new Error("Unexpected Error");

@@ -64,7 +64,7 @@ const FormLogin = ( {setDisplayForm, setLoggedUser} ) => {
               </div>
               <button type="submit" className="btn btn-primary w-50 fs-5 text" value="login">Login</button>
             </form>
-            <a href="/#" onClick={() => {console.log("Forgotten pass")}}>Forgotten password?</a>
+            <a href="/#" onClick={() => {alert("This function is not availaible yet.")}}>Forgotten password?</a>
             <hr style={{width:"90%", margin: "0.5rem auto", opacity: 0.6}}></hr>
             <div>
               <span style={{ fontSize: "0.85rem" }}>Haven't an account yet?</span>

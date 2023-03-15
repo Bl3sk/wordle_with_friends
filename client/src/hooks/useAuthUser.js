@@ -41,6 +41,7 @@ function useAuthContext() {
               return
           } else {
             setLoggedUser({...loggedUser, 
+              id: data.data._id,
               nickname: data.data.nickname,
               avatar: data.data.avatar
             })

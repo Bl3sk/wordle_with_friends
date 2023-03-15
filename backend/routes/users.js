@@ -78,11 +78,13 @@ router.post("/login", async (req, res) => {
 
 router.get("/", async (req, res, next) => {
     try {
-        console.log(req.query.userId)
-        const userId = { _id: ObjectId(req.query.userId)}
-        let user = await libraryDao.getUser(userId);
+        console.log("query", req.query)
+        let filter;
+        if (req.query.userId) filter = { _id: ObjectId(req.query.userId)}
+        if (req.query.nickname) filter = { nickname: (req.query.nickname)}
+        let user = await libraryDao.getUser(filter);
         res.json(user)
-        console.log(user);
+        console.log({user});
     } catch (err) {
         next(err);
     }
@@ -93,37 +95,65 @@ const upload = multer().single('files');
 
 router.put('/updateUser', authenticateToken, upload, async (req, res) => {
   try {
+    let update;
     const file = req.file;
     const inputData = req.body;
+    if (file) {
+        update = {
+            name: "avatar",
+            data: {
+            name: file.originalname,
+            type: file.mimetype,
+            size: file.size,
+            data: file.buffer
+          }}
+    }
+    if (inputData.nickname) {
+        const nicknameExist = await libraryDao.getUser({nickname: inputData.nickname});
+        if (nicknameExist) {
+            throw new Error('User exist') // Express will catch this on its own.
+        }
+        update = {
+            name: "nickname",
+            data: inputData.nickname
+        }
+    }
     console.log("inputData", inputData)
-    console.log(req.file)
+    console.log({update})
+    console.log(inputData.userId)
     await libraryDao.updateUser({
-      id: inputData.userId,
-      avatar: {
-        name: file.originalname,
-        type: file.mimetype,
-        size: file.size,
-        data: file.buffer
-      }
+        id: inputData.userId,
+        update
     });
-    res.json({ message: "User updated." });
+    res.json({ msg: "User updated." });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Error while updating user." });
+    if (err = "User exist") {
+        res.status(409).json({
+            msg: err
+        })
+    } else {
+        res.status(500).json({ msg: "Error while updating user." });
+    }
   }
 });
 
 
 router.delete("/deleteAvatar", authenticateToken, async (req, res) => {
     try {
-        console.log(req.query)
+        console.log("query", req.query)
+        const update = {
+            name: "avatar",
+            data: ""
+        }
         await libraryDao.updateUser({
             id: req.query.userId,
-            avatar: ""
+            update
         });
-        res.json({ message: "Avatar deleted." });
+        res.json({ msg: "Avatar deleted." });
     } catch (err) {
-        res.status(500).json({ message: "Error while deleting avatar." });
+        console.log(err)
+        res.status(500).json({ msg: "Error while deleting avatar." });
     }
 })
 
