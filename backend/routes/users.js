@@ -90,13 +90,14 @@ router.get("/", async (req, res, next) => {
     }
 })
 
-const multer = require('multer');
-const upload = multer().single('files');
+const multer = require("multer");
+const upload = multer().single("avatar");
 
 router.put('/updateUser', authenticateToken, upload, async (req, res) => {
   try {
     let update;
     const file = req.file;
+    console.log(file)
     const inputData = req.body;
     if (file) {
         update = {

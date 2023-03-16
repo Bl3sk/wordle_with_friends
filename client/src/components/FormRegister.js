@@ -3,7 +3,7 @@ import { axiosInstance } from '../config/config'
 import { useState, useEffect } from "react"
 
 const FormRegister = ( {setDisplayForm} ) => {
-    const { checkValidationNickname, checkValidationEmail, checkValidationPassword, checkValidationRepeatedPassword, showFeedback } = useFormValidation()
+    const { checkValidationNickname, checkValidationEmail, checkValidationPassword, checkValidationRepeatedPassword, checkInputValidation, showFeedback, alert } = useFormValidation()
     const [registerData, setRegisterData] = useState({
       nickname: "",
       email: "",
@@ -32,7 +32,8 @@ const FormRegister = ( {setDisplayForm} ) => {
       .then((res) => {
         console.log(res.data.msg, res);
         console.log(res.status)
-        if (res.status === 200) alert('You have been succesfully registered! <br> You can login now.', 'success')
+        const alertPlaceholder = document.getElementById('registrationAlert')
+        if (res.status === 200) alert(alertPlaceholder, 'You have been succesfully registered! <br> You can login now.', 'success')
       })
       .catch((err) => {
         console.log(err.response.data.msg, err);
@@ -48,62 +49,26 @@ const FormRegister = ( {setDisplayForm} ) => {
         })
       })
     }
-    
-    function alert(message, type) {
-      const alertPlaceholder = document.getElementById('registrationAlert')
-      const wrapper = document.createElement('div')
-      wrapper.innerHTML = [
-        `<div class="alert alert-${type} alert-dismissible" role="alert" style="border-radius: 0">`,
-        `   <div>${message}</div>`,
-        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-        '</div>'
-      ].join('')
-      alertPlaceholder.append(wrapper)
-    };
 
     useEffect(() => {
       const input = document.querySelector("#floatingNick")
-      if (registerData.nickname.length === 0) {
-        input.classList.remove("is-valid", "is-invalid");
-        return
-      } 
-      if (alreadyUsed.usedNicknames.includes(registerData.nickname)) {
-        showFeedback(input, "invalid") 
-        return
-      }
-      showFeedback(input, checkValidationNickname(registerData.nickname))
-    }, [registerData.nickname, alreadyUsed, checkValidationNickname, showFeedback]);
+      checkInputValidation(input, alreadyUsed.usedNicknames, registerData.nickname, checkValidationNickname)
+    }, [registerData.nickname, alreadyUsed, checkValidationNickname, checkInputValidation, showFeedback]);
 
     useEffect(() => {
       const input = document.querySelector("#floatingEmail")
-      if (registerData.email.length === 0) {
-        input.classList.remove('is-valid', 'is-invalid');
-        return
-      } 
-      if (alreadyUsed.usedEmails.includes(registerData.email)) {
-        showFeedback(input, "invalid") 
-        return
-      }
-      showFeedback(input, checkValidationEmail(registerData.email))
-    }, [registerData.email, alreadyUsed, checkValidationEmail, showFeedback]);
+      checkInputValidation(input, alreadyUsed.usedEmails, registerData.email, checkValidationEmail)
+    }, [registerData.email, alreadyUsed, checkValidationEmail, checkInputValidation, showFeedback]);
 
     useEffect(() => {
       const input = document.querySelector("#floatingPassword");
-      if (registerData.password.length === 0) {
-        input.classList.remove("is-valid", "is-invalid");
-        return
-      } 
-      showFeedback(input, checkValidationPassword(registerData.password))
-    }, [registerData.password, checkValidationPassword, showFeedback]);
+      checkInputValidation(input, null, registerData.password, checkValidationPassword)
+    }, [registerData.password, checkValidationPassword, checkInputValidation, showFeedback]);
 
     useEffect(() => {
       const input = document.querySelector("#floatingPassword2");
-      if (registerData.repeatedPassword.length === 0) {
-        input.classList.remove("is-valid", "is-invalid");
-        return
-      } 
-      showFeedback(input, checkValidationRepeatedPassword(registerData.password, registerData.repeatedPassword))
-    }, [registerData.repeatedPassword, registerData.password, checkValidationRepeatedPassword, showFeedback]);
+      checkInputValidation(input, null, {password: registerData.password, repeatedPassword: registerData.repeatedPassword}, checkValidationRepeatedPassword)
+    }, [registerData.repeatedPassword, registerData.password, checkValidationRepeatedPassword, checkInputValidation, showFeedback]);
     console.log(alreadyUsed)
     return ( 
         <div>

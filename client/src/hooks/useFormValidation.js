@@ -6,6 +6,17 @@ const useFormValidation = () => {
         el.classList.add("is-" + option); 
     }, []);
 
+    function alert(alertPlaceholder, message, type) {
+      const wrapper = document.createElement('div')
+      wrapper.innerHTML = [
+        `<div class="alert alert-${type} alert-dismissible" role="alert" style="border-radius: 0">`,
+        `   <div>${message}</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        '</div>'
+      ].join('')
+      alertPlaceholder.append(wrapper)
+    };
+
     const checkValidationNickname = useCallback((nickname) => {
         if (nickname.length >= 3 && nickname.length <= 12) return "valid"
         if (nickname.length < 3 || nickname.length > 12) return "invalid"     
@@ -23,12 +34,25 @@ const useFormValidation = () => {
         if (password.length < 6 || password.length > 30) return "invalid"
       }, []);
   
-      const checkValidationRepeatedPassword = useCallback((password, repeatedPassword) => {
-        if (password === repeatedPassword) return "valid"
-        if (password !== repeatedPassword) return "invalid"
+      const checkValidationRepeatedPassword = useCallback((pass) => {
+        if (pass.password === pass.repeatedPassword) return "valid"
+        if (pass.password !== pass.repeatedPassword) return "invalid"
       }, []);
+
+      const checkInputValidation = useCallback((input, usedValues, value, validationFunction) => {
+        if (value.length === 0) {
+          input.classList.remove("is-valid", "is-invalid");
+          return
+        } 
+        if (usedValues && usedValues.includes(value)) {
+          showFeedback(input, "invalid") 
+          return
+        }
+        showFeedback(input, validationFunction(value))
+      }, [showFeedback]);
+
     return ( 
-        {checkValidationNickname, checkValidationEmail, checkValidationPassword, checkValidationRepeatedPassword, showFeedback}
+        {checkValidationNickname, checkValidationEmail, checkValidationPassword, checkValidationRepeatedPassword, checkInputValidation, showFeedback, alert}
      );
 }
  

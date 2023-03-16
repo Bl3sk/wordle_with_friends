@@ -18,7 +18,7 @@ registerPlugin(
   FilePondPluginFileValidateSize
 );
 const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
-    const { checkValidationNickname, checkValidationPassword, checkValidationRepeatedPassword, showFeedback } = useFormValidation()
+    const { checkValidationNickname, checkValidationPassword, checkValidationRepeatedPassword, showFeedback, alert } = useFormValidation()
     const [avatarImage, setAvatarImage] = useState();
     const [alreadyUsed, setAlreadyUsed] = useState({
       usedNicknames: [],
@@ -47,17 +47,7 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
         targetDiv.classList.add('show');
         });
     });
-    function alert(message, type) {
-      const alertPlaceholder = document.getElementById('editNicknameAlert')
-      const wrapper = document.createElement('div')
-      wrapper.innerHTML = [
-        `<div class="alert alert-${type} alert-dismissible" role="alert" style="border-radius: 0">`,
-        `   <div>${message}</div>`,
-        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-        '</div>'
-      ].join('')
-      alertPlaceholder.append(wrapper)
-    };
+
     function handleChangeNickname() {
       //const nickname = checkValidationNickname(editData.nickname)
       //if (nickname !== "valid") return
@@ -73,7 +63,8 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
         console.log(res.data.msg, res);
         console.log(res.status)
         if (res.status === 200) {
-          alert('Your nickname has been succesfully changed!', 'success')
+          const alertPlaceholder = document.getElementById('editNicknameAlert')
+          alert(alertPlaceholder, 'Your nickname has been succesfully changed!', 'success')
           updateLoggedUser()
         }
       })
@@ -155,7 +146,7 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
                 <div id="editAvatar" className="collapse">
                     <a className="collapsed" href="#editAvatar" data-bs-toggle="collapse"><i className="bi bi-x-circle btn-hide"></i></a>
                     <FilePond ref={pond}
-                        name="files"
+                        name="avatar"
                         files={avatarImage}
                         onupdatefiles={async (files) => {
                           if (!avatarImage) return
