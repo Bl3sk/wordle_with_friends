@@ -9,7 +9,7 @@ import * as bootstrap from 'bootstrap';
 
 function App() {
   const { solutions } = useWords()
-  const { loggedUser, setLoggedUser, updateLoggedUser } = useAuthUser()
+  const { loggedUser, setLoggedUser, updateLoggedUser, handleLogout } = useAuthUser()
   const [gameType, setGameType] = useState("classic")
   console.log(solutions, loggedUser)
   return (
@@ -44,7 +44,7 @@ function App() {
             </li>
         {loggedUser && 
             <li>
-              <a className="dropdown-item" href="/#" onClick={() => {setLoggedUser("")}}>
+              <a className="dropdown-item" href="/#" onClick={() => {handleLogout()}}>
                 <i className="bi bi-box-arrow-in-right"></i> Log out
               </a>
             </li>}
@@ -62,7 +62,7 @@ function App() {
             <button type="button" className="btn text-white p-1" onClick={() => {new bootstrap.Modal(document.getElementById('profileModal')).show();}}>
                   <div className="user-preview">
                     <img src={loggedUser.avatar ? `data:${loggedUser.avatar.type};base64,${loggedUser.avatar.data}` : process.env.PUBLIC_URL + "/wordle_icon.jpg"} alt="Avatar" />
-                    <span>{loggedUser.nickname}</span>
+                    <span>{loggedUser.user.nickname}</span>
                 </div>
             </button>
         </div> }

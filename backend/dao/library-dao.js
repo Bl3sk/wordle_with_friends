@@ -10,6 +10,7 @@ class LibraryDao {
     constructor() {
         this.wordsCollection = "words"
         this.usersCollection = "users"
+        this.avatarsCollection = "avatars"
         DbConnection.init(connectionString);
  }
     async getWords(date) {
@@ -19,18 +20,26 @@ class LibraryDao {
             .findOne({ date: date })
     }
 
-    async getUser(user) {
-        console.log(user)
+    async getUser(filter) {
+        console.log(filter)
         let db = await DbConnection.get(connectionString);
         return await db
             .collection(this.usersCollection)
-            .findOne(user)
+            .findOne(filter)
     }
 
-    // returns the first 1000 books by default
-    // filter param allows to filter books by specific attributes
+    async getAvatar(filter) {
+        console.log("GET AVATAR", filter)
+        let db = await DbConnection.get(connectionString);
+        return await db
+            .collection(this.avatarsCollection)
+            .findOne(filter)
+    }
+
+    // returns the first 1000 documents by default
+    // filter param allows to filter documents by specific attributes
     // pageInfo allows to specify the page number and page size
-    // sort param allows to specify how the books should be sorted - by which attributes
+    // sort param allows to specify how the documents should be sorted - by which attributes
     // projection param allows to load only some attributes for each book
     async listBooks(filter = {}, pageInfo = {}, sort = {}, projection = {}) {
         let pageIndex = pageInfo["pageIndex"] ? pageInfo["pageIndex"] : 0;
@@ -74,10 +83,20 @@ class LibraryDao {
             throw new Error("Unexpected Error");
         }
     }
-    async registerUser(data) {
+    async addUser(data) {
         let db = await DbConnection.get(connectionString);
         let status = await db
             .collection(this.usersCollection)
+            .insertOne(data)
+        console.log(status)
+        if (!status || !status.acknowledged) {
+            throw new Error("Unexpected Error");
+        }
+    }
+    async addAvatar(data) {
+        let db = await DbConnection.get(connectionString);
+        let status = await db
+            .collection(this.avatarsCollection)
             .insertOne(data)
         console.log(status)
         if (!status || !status.acknowledged) {
@@ -96,17 +115,17 @@ class LibraryDao {
             throw new Error("Unexpected Error");
         }
     }
-    // returns count of all books that match the filter
+    // returns count of all documents that match the filter
     async count(filter) {
         let db = await DbConnection.get(connectionString);
         return await db
             .collection(this.wordsCollection)
             .countDocuments(filter)
         }
-    // returns the array of books according to params
-    // filter param allows to filter books by specific attributes
+    // returns the array of documents according to params
+    // filter param allows to filter documents by specific attributes
     // skip and limit allows to specify the page number and page size
-    // sort param allows to specify how the books should be sorted - by which attributes
+    // sort param allows to specify how the documents should be sorted - by which attributes
     // options.projection param allows to load only some attributes for each book
     async _findWrapper(filter, options, skip = 0, sort = {}, limit = 0) {
         let db = await DbConnection.get(connectionString);

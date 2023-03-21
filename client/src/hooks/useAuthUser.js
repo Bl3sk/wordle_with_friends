@@ -4,34 +4,60 @@ import jwtDecode  from 'jwt-decode'
 
 function useAuthContext() {
     const [loggedUser, setLoggedUser] = useState("")
-    console.log(loggedUser)
+    console.log({loggedUser})
 
     // získání přihlášeného uživatele z local storage
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem("user"))
-        if (user) {
+        const userFromStorage = JSON.parse(localStorage.getItem("user"))
+        console.log({userFromStorage})
+        if (userFromStorage) {
           try {
-            const decoded = jwtDecode(user.jwt_token);
+            const decoded = jwtDecode(userFromStorage.jwt_token);
             const currentTime = Date.now() / 1000; // převedení na vteřiny
             if (decoded.exp > currentTime) {
-              setLoggedUser(user);
+              axiosInstance({
+                url: `users/getUserData/?userId=${userFromStorage._id}`,
+                method: "GET"
+            })
+              .then((res) => {
+                  const data = res.data
+                  console.log("Získana data: ", data)
+                  if(!res.data) {
+                      console.log("Nedostali jsme žádná data.")
+                      return
+                  } else {
+                    data.user.jwt_token = userFromStorage.jwt_token
+                    setLoggedUser(data);
+                  }
+              })
+              .catch(err => {
+                  console.log("Během získávání uživatele se něco pokazilo.", err)
+              })
             }
           } catch (error) {
             console.error('Chyba JWT tokenu', error);
           }
         }
-       
       }, [])
 
     // aktualizace přihlášeného uživatele z local storage
     useEffect(() => { 
-        const user = JSON.stringify(loggedUser)
+        if (!loggedUser) return
+        console.log("TESSSSSSSSSTT v EEEFFECT,", loggedUser)
+        let user = {
+          _id: loggedUser.user._id,
+          nickname: loggedUser.user.nickname,
+          jwt_token: loggedUser.user.jwt_token
+        }
+        user = JSON.stringify(user)
+        console.log("USEEEEEEEEEER",loggedUser.user)
         if (user) localStorage.setItem("user", user)
+        //localStorage.setItem("avatar", loggedUser.avatar)
     }, [loggedUser])
     
     function updateLoggedUser() {
       axiosInstance({
-          url: `users?userId=${loggedUser.id}`,
+          url: `users/getUser/?userId=${loggedUser._id}`,
           method: "GET"
       })
       .then((data) => {
@@ -41,9 +67,9 @@ function useAuthContext() {
               return
           } else {
             setLoggedUser({...loggedUser, 
-              id: data.data._id,
+              _id: data.data._id,
               nickname: data.data.nickname,
-              avatar: data.data.avatar
+              avatarId: data.data.avatarId
             })
           }
       })
@@ -51,8 +77,14 @@ function useAuthContext() {
           console.log("Během získávání uživatele se něco pokazilo.", err)
       })
   }
+  
+    function handleLogout() {
+      localStorage.removeItem("user");
+      //localStorage.removeItem("avatar");
+      setLoggedUser("")
+    }
   return (
-    { loggedUser, setLoggedUser, updateLoggedUser }
+    { loggedUser, setLoggedUser, updateLoggedUser, handleLogout }
   )
 }
 

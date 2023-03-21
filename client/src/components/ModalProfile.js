@@ -103,7 +103,7 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
             <div className="modal-body">
                 <div className="user-preview">
                   <img src={loggedUser.avatar ? `data:${loggedUser.avatar.type};base64,${loggedUser.avatar.data}` : process.env.PUBLIC_URL + "/wordle_icon.jpg"} alt="Avatar" />
-                  <span>{loggedUser.nickname}</span> 
+                  {loggedUser.user && <span>{loggedUser.user.nickname}</span> }
                   <div className="dropdown-center">
                     <a className="dropdown-toggle" href="/#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       <i className="bi bi-pencil-square"></i>Edit
@@ -157,14 +157,15 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
                         server={{
                           url: axiosInstance.defaults.baseURL,
                           process: {
-                            url: '/users/updateUser',
-                            method: 'PUT',
+                            url: '/users/uploadAvatar',
+                            method: 'POST',
                             headers: {
                               'Authorization': 'Bearer ' + loggedUser.jwt_token
                             },
                             ondata: (formData) => {
                               console.log("fooormDATAAA", formData)
                               formData.append("userId", loggedUser.id);
+                              formData.append("avatarId", loggedUser.avatarId);
                               return formData;
                             },
                             onload: async (response) => {

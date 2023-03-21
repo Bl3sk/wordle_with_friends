@@ -28,10 +28,11 @@ router.post("/register", async (req, res) => {
         } else {
             const salt = await bcrypt.genSalt(10)
             const hash = await bcrypt.hash(newUser.password, salt)
-            await libraryDao.registerUser({
+            await libraryDao.addUser({
                 nickname: newUser.nickname,
                 email: newUser.email,
-                password: hash
+                password: hash,
+                avatar: false
             });
             res.json({
                 msg: "Data saved.", 
@@ -52,23 +53,25 @@ router.post("/login", async (req, res) => {
         const user = await libraryDao.getUser({nickname: inputData.nickname});
         console.log("uživatel v loginu ", user)
         if (await bcrypt.compare(inputData.password, user.password)) {
-            console.log("první IF")
+            let avatar = await libraryDao.getAvatar({userId: user._id});
             const token = createToken(user._id);
             res.json({
-                msg: "User successfully logged in.", 
-                data: {
-                    nickname: user.nickname,
-                    id: user._id,
-                    avatar: user.avatar,
-                    jwt_token: token
+                    user: {
+                        nickname: user.nickname,
+                        _id: user._id,
+                        avatarId: user.avatarId,
+                        jwt_token: token
+                    },
+                    avatar: avatar.avatar 
                 }
-            });
+            );
         } else {
             res.status(400).json({
                 msg: "Incorrect login data."
             })
         }
     } catch (err) {
+        console.log(err)
         res.status(500).json({
             msg: err
         })
@@ -76,7 +79,7 @@ router.post("/login", async (req, res) => {
     }
 })
 
-router.get("/", async (req, res, next) => {
+router.get("/getUser", async (req, res) => {
     try {
         console.log("query", req.query)
         let filter;
@@ -84,31 +87,33 @@ router.get("/", async (req, res, next) => {
         if (req.query.nickname) filter = { nickname: (req.query.nickname)}
         let user = await libraryDao.getUser(filter);
         res.json(user)
-        console.log({user});
+        console.log("user,",user);
     } catch (err) {
-        next(err);
+        console.error(err);
+        res.status(500).json({ msg: err });
     }
 })
 
-const multer = require("multer");
-const upload = multer().single("avatar");
+router.get("/getUserData", async (req, res) => {
+    try {
+        console.log("query", req.query)
+        const userfilter = { _id: ObjectId(req.query.userId)}
+        const avatarfilter = { userId: ObjectId(req.query.userId)}
+        let user = await libraryDao.getUser(userfilter);
+        let avatar = await libraryDao.getAvatar(avatarfilter);
+        avatar = avatar.avatar
+        res.json({user, avatar})
+        console.log("user a avatar",{user, avatar});
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: err });
+    }
+})
 
-router.put('/updateUser', authenticateToken, upload, async (req, res) => {
+router.put('/updateUser', authenticateToken, async (req, res) => {
   try {
     let update;
-    const file = req.file;
-    console.log(file)
     const inputData = req.body;
-    if (file) {
-        update = {
-            name: "avatar",
-            data: {
-            name: file.originalname,
-            type: file.mimetype,
-            size: file.size,
-            data: file.buffer
-          }}
-    }
     if (inputData.nickname) {
         const nicknameExist = await libraryDao.getUser({nickname: inputData.nickname});
         if (nicknameExist) {
@@ -121,24 +126,74 @@ router.put('/updateUser', authenticateToken, upload, async (req, res) => {
     }
     console.log("inputData", inputData)
     console.log({update})
-    console.log(inputData.userId)
     await libraryDao.updateUser({
         id: inputData.userId,
         update
     });
     res.json({ msg: "User updated." });
   } catch (err) {
-    console.error(err);
-    if (err = "User exist") {
-        res.status(409).json({
-            msg: err
+        console.error(err);
+        if (err = "User exist") {
+            res.status(409).json({
+                msg: err
         })
-    } else {
-        res.status(500).json({ msg: "Error while updating user." });
+    }   else {
+            res.status(500).json({ msg: "Error while updating user." });
+        }
     }
-  }
 });
 
+router.get("/getAvatar", async (req, res, next) => {
+    try {
+        console.log("query", req.query)
+        const filter = { _id: ObjectId(req.query.userId)}
+        let avatar = await libraryDao.getAvatar(filter);
+        res.json(avatar)
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: err });
+    }
+})
+
+const multer = require("multer");
+const upload = multer().single("avatar");
+
+router.post("/uploadAvatar", upload, async (req, res) => {
+    const file = req.file;
+    const userId = req.body.userId;
+    const hasAvatar = req.body.avatarId
+    const avatar = {
+        name: file.originalname,
+        type: file.mimetype,
+        size: file.size,
+        data: file.buffer
+      }
+    console.log(hasAvatar)
+    console.log(req.body)
+    try {
+        if (hasAvatar) {
+            console.log("nmic")
+        } else {
+            await libraryDao.addAvatar({
+                userId: ObjectId(userId), avatar: avatar
+            });
+            const update = {
+                name: "avatarId",
+                data: "nějaké id"
+            }
+            await libraryDao.updateUser({
+                id: userId,
+                update
+            });
+        }
+        res.json({ msg: "User updated." });
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            msg: err
+        })
+    }
+})
 
 router.delete("/deleteAvatar", authenticateToken, async (req, res) => {
     try {
