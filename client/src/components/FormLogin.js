@@ -9,7 +9,7 @@ const FormLogin = ( {setDisplayForm, setLoggedUser} ) => {
   });
 
   function handleSubmit(e) {
-    e.preventDefault()
+    //e.preventDefault()
     axiosInstance({
         url: `/users/login`,
         method: "POST",

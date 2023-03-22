@@ -57,20 +57,19 @@ function useAuthContext() {
     
     function updateLoggedUser() {
       axiosInstance({
-          url: `users/getUser/?userId=${loggedUser._id}`,
+          url: `users/getUserData/?userId=${loggedUser.user._id}`,
           method: "GET"
       })
       .then((data) => {
           console.log("Získana data: ", data)
+          const avatar = data.data.avatar
+          const user = data.data.user
           if(!data.data) {
               console.log("Nedostali jsme žádná data.")
               return
           } else {
-            setLoggedUser({...loggedUser, 
-              _id: data.data._id,
-              nickname: data.data.nickname,
-              avatarId: data.data.avatarId
-            })
+            user.jwt_token = loggedUser.user.jwt_token
+            setLoggedUser({user, avatar})
           }
       })
       .catch(err => {

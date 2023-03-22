@@ -49,15 +49,13 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
     });
 
     function handleChangeNickname() {
-      //const nickname = checkValidationNickname(editData.nickname)
-      //if (nickname !== "valid") return
       axiosInstance({
         url: '/users/updateUser',
         method: 'PUT',
         headers: {
-          'Authorization': 'Bearer ' + loggedUser.jwt_token
+          'Authorization': 'Bearer ' + loggedUser.user.jwt_token
         },
-        data: {...editData, userId: loggedUser.id} 
+        data: {...editData, userId: loggedUser.user._id} 
       })
       .then((res) => {
         console.log(res.data.msg, res);
@@ -164,8 +162,8 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
                             },
                             ondata: (formData) => {
                               console.log("fooormDATAAA", formData)
-                              formData.append("userId", loggedUser.id);
-                              formData.append("avatarId", loggedUser.avatarId);
+                              formData.append("userId", loggedUser.user._id);
+                              formData.append("avatarId", loggedUser.user.avatarId);
                               return formData;
                             },
                             onload: async (response) => {

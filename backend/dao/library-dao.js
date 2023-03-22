@@ -98,10 +98,11 @@ class LibraryDao {
         let status = await db
             .collection(this.avatarsCollection)
             .insertOne(data)
-        console.log(status)
+        console.log({status})
         if (!status || !status.acknowledged) {
             throw new Error("Unexpected Error");
         }
+        return status
     }
     // update
     async updateUser(user) {
@@ -110,7 +111,18 @@ class LibraryDao {
         let status = await db
             .collection(this.usersCollection)
             .updateOne( { _id: ObjectId(user.id) }, { $set: { [user.update.name]: user.update.data } } )
-        console.log(status)
+        console.log({status})
+        if (!status || !status.acknowledged) {
+            throw new Error("Unexpected Error");
+        }
+    }
+    async updateAvatar(avatar) {
+        console.log("user DATA:", avatar)
+        let db = await DbConnection.get(connectionString);
+        let status = await db
+            .collection(this.avatarsCollection)
+            .updateOne( { _id: ObjectId(avatar.id)}, { $set: { avatar: avatar.avatar } } )
+        console.log({status})
         if (!status || !status.acknowledged) {
             throw new Error("Unexpected Error");
         }

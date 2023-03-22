@@ -5,6 +5,8 @@ const router = express.Router()
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const ObjectId = require('mongodb').ObjectID;
+const multer = require("multer");
+const upload = multer().single("avatar");
 
 function createToken (id) {
     return jwt.sign({id}, process.env.SECRET_STRING, { expiresIn: "7d" })
@@ -54,6 +56,7 @@ router.post("/login", async (req, res) => {
         console.log("uživatel v loginu ", user)
         if (await bcrypt.compare(inputData.password, user.password)) {
             let avatar = await libraryDao.getAvatar({userId: user._id});
+            if (avatar) avatar = avatar.avatar
             const token = createToken(user._id);
             res.json({
                     user: {
@@ -62,7 +65,7 @@ router.post("/login", async (req, res) => {
                         avatarId: user.avatarId,
                         jwt_token: token
                     },
-                    avatar: avatar.avatar 
+                    avatar: avatar 
                 }
             );
         } else {
@@ -81,7 +84,7 @@ router.post("/login", async (req, res) => {
 
 router.get("/getUser", async (req, res) => {
     try {
-        console.log("query", req.query)
+        console.log("query getUser", req.query)
         let filter;
         if (req.query.userId) filter = { _id: ObjectId(req.query.userId)}
         if (req.query.nickname) filter = { nickname: (req.query.nickname)}
@@ -96,14 +99,14 @@ router.get("/getUser", async (req, res) => {
 
 router.get("/getUserData", async (req, res) => {
     try {
-        console.log("query", req.query)
+        console.log("query getUserDAta", req.query)
         const userfilter = { _id: ObjectId(req.query.userId)}
         const avatarfilter = { userId: ObjectId(req.query.userId)}
         let user = await libraryDao.getUser(userfilter);
         let avatar = await libraryDao.getAvatar(avatarfilter);
-        avatar = avatar.avatar
+        if (avatar) avatar = avatar.avatar
         res.json({user, avatar})
-        console.log("user a avatar",{user, avatar});
+        console.log("user",{user});
     } catch (err) {
         console.error(err);
         res.status(500).json({ msg: err });
@@ -145,7 +148,7 @@ router.put('/updateUser', authenticateToken, async (req, res) => {
 
 router.get("/getAvatar", async (req, res, next) => {
     try {
-        console.log("query", req.query)
+        console.log("query getAvatar", req.query)
         const filter = { _id: ObjectId(req.query.userId)}
         let avatar = await libraryDao.getAvatar(filter);
         res.json(avatar)
@@ -155,35 +158,34 @@ router.get("/getAvatar", async (req, res, next) => {
     }
 })
 
-const multer = require("multer");
-const upload = multer().single("avatar");
-
 router.post("/uploadAvatar", upload, async (req, res) => {
-    const file = req.file;
-    const userId = req.body.userId;
-    const hasAvatar = req.body.avatarId
-    const avatar = {
-        name: file.originalname,
-        type: file.mimetype,
-        size: file.size,
-        data: file.buffer
+    const {originalname, mimetype, size, buffer} = req.file;
+    const {userId, avatarId} = req.body
+    const newAvatar = {
+        name: originalname,
+        type: mimetype,
+        size: size,
+        data: buffer
       }
-    console.log(hasAvatar)
+    console.log(avatarId)
     console.log(req.body)
     try {
-        if (hasAvatar) {
-            console.log("nmic")
-        } else {
-            await libraryDao.addAvatar({
-                userId: ObjectId(userId), avatar: avatar
+        if (avatarId == "") {
+            const addedAvatar = await libraryDao.addAvatar({
+                userId: ObjectId(userId), avatar: newAvatar
             });
-            const update = {
+           const update = {
                 name: "avatarId",
-                data: "nějaké id"
+                data: addedAvatar.insertedId
             }
             await libraryDao.updateUser({
                 id: userId,
                 update
+            });
+        } else {
+            console.log("Jdeme na update")
+            await libraryDao.updateAvatar({
+                id: avatarId, avatar: newAvatar
             });
         }
         res.json({ msg: "User updated." });
@@ -197,7 +199,7 @@ router.post("/uploadAvatar", upload, async (req, res) => {
 
 router.delete("/deleteAvatar", authenticateToken, async (req, res) => {
     try {
-        console.log("query", req.query)
+        console.log("query delete", req.query)
         const update = {
             name: "avatar",
             data: ""
