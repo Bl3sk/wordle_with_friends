@@ -11,6 +11,7 @@ class LibraryDao {
         this.wordsCollection = "words"
         this.usersCollection = "users"
         this.avatarsCollection = "avatars"
+        this.scoresCollection = "score"
         DbConnection.init(connectionString);
  }
     async getWords(date) {
@@ -18,6 +19,22 @@ class LibraryDao {
         return await db
             .collection(this.wordsCollection)
             .findOne({ date: date })
+    }
+
+    async getScoreAndAvatar(filter) {
+        console.log({filter})
+        let db = await DbConnection.get(connectionString);
+        return await db
+            .collection(this.scoresCollection)
+            .aggregate([ 
+               /* { $match : filter },*/
+                { $lookup: {
+                  from: "avatars",
+                  localField: "userId",
+                  foreignField: "userId",
+                  as: "avatarResult"
+                }}
+              ]).toArray()
     }
 
     async getUser(filter) {
@@ -60,13 +77,12 @@ class LibraryDao {
             };
         }
     }
-    // deletes the first book that match the code
-    async deleteBook(codeStr) {
-        //let filter = { code };
+    // delete
+    async deleteAvatar(id) {
         let db = await DbConnection.get(connectionString);
         let status = await db
-            .collection(this.wordsCollection)
-            .deleteOne({ code : codeStr })
+            .collection(this.avatarsCollection)
+            .deleteOne({ userId : id })
         console.log(status)
         if (!status || !status.acknowledged) {
             throw new Error("Unexpected Error");
@@ -83,12 +99,23 @@ class LibraryDao {
             throw new Error("Unexpected Error");
         }
     }
+    async addScore(userId) {
+        let db = await DbConnection.get(connectionString);
+        let status = await db
+            .collection(this.scoresCollection)
+            .insertOne({score: 0, userId: userId})
+        console.log(status)
+        if (!status || !status.acknowledged) {
+            throw new Error("Unexpected Error");
+        }
+    }
     async addUser(data) {
         let db = await DbConnection.get(connectionString);
         let status = await db
             .collection(this.usersCollection)
             .insertOne(data)
         console.log(status)
+        this.addScore(status.insertedId)
         if (!status || !status.acknowledged) {
             throw new Error("Unexpected Error");
         }

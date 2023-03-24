@@ -34,7 +34,7 @@ router.post("/register", async (req, res) => {
                 nickname: newUser.nickname,
                 email: newUser.email,
                 password: hash,
-                avatar: false
+                avatarId: ""
             });
             res.json({
                 msg: "Data saved.", 
@@ -55,17 +55,28 @@ router.post("/login", async (req, res) => {
         const user = await libraryDao.getUser({nickname: inputData.nickname});
         console.log("uživatel v loginu ", user)
         if (await bcrypt.compare(inputData.password, user.password)) {
-            let avatar = await libraryDao.getAvatar({userId: user._id});
-            if (avatar) avatar = avatar.avatar
+            let userData = await libraryDao.getScoreAndAvatar({userId: user._id});
+            console.log({userData})
+            const score = userData[0].score
+            let avatar;
+            if (userData[0].avatarResult.length === 0) {
+                avatar = ""
+            } 
+            if (userData[0].avatarResult.length > 0) {
+                avatar = userData[0].avatarResult[0].avatar
+            } 
+            console.log({userData})
+            console.log(avatar)
             const token = createToken(user._id);
             res.json({
                     user: {
                         nickname: user.nickname,
                         _id: user._id,
                         avatarId: user.avatarId,
-                        jwt_token: token
+                        jwt_token: token,
+                        score: score
                     },
-                    avatar: avatar 
+                    avatar: avatar
                 }
             );
         } else {
@@ -81,7 +92,7 @@ router.post("/login", async (req, res) => {
         return
     }
 })
-
+/*
 router.get("/getUser", async (req, res) => {
     try {
         console.log("query getUser", req.query)
@@ -95,16 +106,24 @@ router.get("/getUser", async (req, res) => {
         console.error(err);
         res.status(500).json({ msg: err });
     }
-})
+})*/
 
 router.get("/getUserData", async (req, res) => {
     try {
         console.log("query getUserDAta", req.query)
         const userfilter = { _id: ObjectId(req.query.userId)}
-        const avatarfilter = { userId: ObjectId(req.query.userId)}
+        //const avatarfilter = { userId: ObjectId(req.query.userId)}
         let user = await libraryDao.getUser(userfilter);
-        let avatar = await libraryDao.getAvatar(avatarfilter);
-        if (avatar) avatar = avatar.avatar
+        let userData = await libraryDao.getScoreAndAvatar({userId: user._id});
+        const score = userData[0].score
+        user.score = score
+        let avatar;
+        if (userData[0].avatarResult.length === 0) {
+            avatar = ""
+        } 
+        if (userData[0].avatarResult.length > 0) {
+            avatar = userData[0].avatarResult[0].avatar
+        } 
         res.json({user, avatar})
         console.log("user",{user});
     } catch (err) {
@@ -145,7 +164,7 @@ router.put('/updateUser', authenticateToken, async (req, res) => {
         }
     }
 });
-
+/*
 router.get("/getAvatar", async (req, res, next) => {
     try {
         console.log("query getAvatar", req.query)
@@ -156,9 +175,9 @@ router.get("/getAvatar", async (req, res, next) => {
         console.error(err);
         res.status(500).json({ msg: err });
     }
-})
+})*/
 
-router.post("/uploadAvatar", upload, async (req, res) => {
+router.post("/uploadAvatar", authenticateToken, upload, async (req, res) => {
     const {originalname, mimetype, size, buffer} = req.file;
     const {userId, avatarId} = req.body
     const newAvatar = {
@@ -200,8 +219,9 @@ router.post("/uploadAvatar", upload, async (req, res) => {
 router.delete("/deleteAvatar", authenticateToken, async (req, res) => {
     try {
         console.log("query delete", req.query)
+        await libraryDao.deleteAvatar(ObjectId(req.query.userId));
         const update = {
-            name: "avatar",
+            name: "avatarId",
             data: ""
         }
         await libraryDao.updateUser({

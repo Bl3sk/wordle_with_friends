@@ -35,11 +35,15 @@ const useFormValidation = () => {
       }, []);
   
       const checkValidationRepeatedPassword = useCallback((pass) => {
-        if (pass.password === pass.repeatedPassword) return "valid"
-        if (pass.password !== pass.repeatedPassword) return "invalid"
+        const {password, repeatedPassword} = pass
+        console.log({password, repeatedPassword})
+        if (repeatedPassword.length === 0) return
+        if (password === repeatedPassword) return "valid"
+        if (password !== repeatedPassword) return "invalid"
       }, []);
 
       const checkInputValidation = useCallback((input, usedValues, value, validationFunction) => {
+        console.log({value})
         if (value.length === 0) {
           input.classList.remove("is-valid", "is-invalid");
           return

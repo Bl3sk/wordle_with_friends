@@ -143,65 +143,66 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
                 </div>
                 <div id="editAvatar" className="collapse">
                     <a className="collapsed" href="#editAvatar" data-bs-toggle="collapse"><i className="bi bi-x-circle btn-hide"></i></a>
+                    {loggedUser && 
                     <FilePond ref={pond}
-                        name="avatar"
-                        files={avatarImage}
-                        onupdatefiles={async (files) => {
-                          if (!avatarImage) return
-                          setAvatarImage({
-                            avatar: files[0].file});
+                    name="avatar"
+                    files={avatarImage}
+                    onupdatefiles={async (files) => {
+                      if (!avatarImage) return
+                      setAvatarImage({
+                        avatar: files[0].file});
+                    }
+                  }
+                    server={{
+                      url: axiosInstance.defaults.baseURL,
+                      process: {
+                        url: '/users/uploadAvatar',
+                        method: 'POST',
+                        headers: {
+                          'Authorization': 'Bearer ' + loggedUser.user.jwt_token
+                        },
+                        ondata: (formData) => {
+                          console.log("fooormDATAAA", formData)
+                          formData.append("userId", loggedUser.user._id);
+                          formData.append("avatarId", loggedUser.user.avatarId);
+                          return formData;
+                        },
+                        onload: async (response) => {
+                          const msg = JSON.parse(response).msg
+                          console.log({msg})
+                          if(msg === "User updated.") {
+                            setAvatarImage()
+                            updateLoggedUser()
+                          }
+                        }
+                      },
+                      revert: {
+                        url: `/users/deleteAvatar?userId=${loggedUser.user._id}`,
+                        headers: {
+                          'Authorization': 'Bearer ' + loggedUser.user.jwt_token
+                        },
+                        onload: async (response) => {
+                          const msg = JSON.parse(response).msg
+                          console.log({msg})
+                          if(msg === "Avatar deleted.") {
+                            updateLoggedUser()
+                          }
                         }
                       }
-                        server={{
-                          url: axiosInstance.defaults.baseURL,
-                          process: {
-                            url: '/users/uploadAvatar',
-                            method: 'POST',
-                            headers: {
-                              'Authorization': 'Bearer ' + loggedUser.jwt_token
-                            },
-                            ondata: (formData) => {
-                              console.log("fooormDATAAA", formData)
-                              formData.append("userId", loggedUser.user._id);
-                              formData.append("avatarId", loggedUser.user.avatarId);
-                              return formData;
-                            },
-                            onload: async (response) => {
-                              const msg = JSON.parse(response).msg
-                              console.log({msg})
-                              if(msg === "User updated.") {
-                                setAvatarImage()
-                                updateLoggedUser()
-                              }
-                            }
-                          },
-                          revert: {
-                            url: `/users/deleteAvatar?userId=${loggedUser.id}`,
-                            headers: {
-                              'Authorization': 'Bearer ' + loggedUser.jwt_token
-                            },
-                            onload: async (response) => {
-                              const msg = JSON.parse(response).msg
-                              console.log({msg})
-                              if(msg === "Avatar deleted.") {
-                                updateLoggedUser()
-                              }
-                            }
-                          }
-                        }}
-                        acceptedFileTypes={['image/png', 'image/jpeg']}
-                        maxFileSize= {5 * 1024 * 1024}
-                        allowFileEncode={false}
-                        allowImagePreview={true}
-                        allowMultiple={false}
-                        allowImageTransform={true}
-                        imageCropAspectRatio={'1:1'}
-                        imagePreviewHeight={100}
-                        labelIdle='<span className="filepond--label-action">Upload new avatar</span>'
-                      /> 
+                    }}
+                    acceptedFileTypes={['image/png', 'image/jpeg']}
+                    maxFileSize= {5 * 1024 * 1024}
+                    allowFileEncode={false}
+                    allowImagePreview={true}
+                    allowMultiple={false}
+                    allowImageTransform={true}
+                    imageCropAspectRatio={'1:1'}
+                    imagePreviewHeight={100}
+                    labelIdle='<span className="filepond--label-action">Upload new avatar</span>'
+                  /> }
                 </div>
                 <hr></hr>
-                  <p>Nějaký content</p>       
+                    
             </div>
           </div>
         </div>

@@ -21,7 +21,7 @@ const FormRegister = ( {setDisplayForm} ) => {
       const email = checkValidationEmail(registerData.email)
       const nickname = checkValidationNickname(registerData.nickname)
       const psw = checkValidationPassword(registerData.password)
-      const rptPsw = checkValidationRepeatedPassword(registerData.password, registerData.repeatedPassword)
+      const rptPsw = checkValidationRepeatedPassword({password: registerData.password, repeatedPassword: registerData.repeatedPassword})
       if (email !== "valid" || nickname !== "valid" || psw !== "valid" || rptPsw !== "valid") return
       console.log("Jdeme registrovat:", registerData)
       axiosInstance({

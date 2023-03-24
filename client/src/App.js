@@ -5,6 +5,7 @@ import useAuthUser from './hooks/useAuthUser';
 import ModalProfile from "./components/ModalProfile";
 import ModalForm from "./components/ModalForm";
 import { useState } from 'react';
+import { Link } from "react-router-dom";
 import * as bootstrap from 'bootstrap';
 
 function App() {
@@ -38,9 +39,7 @@ function App() {
             </li>
             <div className="dropdown-divider"></div>
             <li>
-              <a className="dropdown-item" href="/#">
-                <i className="bi bi-info-circle-fill"></i> About game
-              </a>
+              <Link className="dropdown-item" to="/about"><i className="bi bi-info-circle-fill"></i> About game</Link>
             </li>
         {loggedUser && 
             <li>
