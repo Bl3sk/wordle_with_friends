@@ -61,7 +61,7 @@ function App() {
             <button type="button" className="btn text-white p-1" onClick={() => {new bootstrap.Modal(document.getElementById('profileModal')).show();}}>
                   <div className="user-preview">
                     <img src={loggedUser.avatar ? `data:${loggedUser.avatar.type};base64,${loggedUser.avatar.data}` : process.env.PUBLIC_URL + "/wordle_icon.jpg"} alt="Avatar" />
-                    <span>{loggedUser.user.nickname}</span>
+                    <span>{loggedUser.nickname}</span>
                 </div>
             </button>
         </div> }

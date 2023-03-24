@@ -53,9 +53,9 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
         url: '/users/updateUser',
         method: 'PUT',
         headers: {
-          'Authorization': 'Bearer ' + loggedUser.user.jwt_token
+          'Authorization': 'Bearer ' + loggedUser.jwt_token
         },
-        data: {...editData, userId: loggedUser.user._id} 
+        data: {...editData, userId: loggedUser._id} 
       })
       .then((res) => {
         console.log(res.data.msg, res);
@@ -101,7 +101,7 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
             <div className="modal-body">
                 <div className="user-preview">
                   <img src={loggedUser.avatar ? `data:${loggedUser.avatar.type};base64,${loggedUser.avatar.data}` : process.env.PUBLIC_URL + "/wordle_icon.jpg"} alt="Avatar" />
-                  {loggedUser.user && <span>{loggedUser.user.nickname}</span> }
+                  {loggedUser && <span>{loggedUser.nickname}</span> }
                   <div className="dropdown-center">
                     <a className="dropdown-toggle" href="/#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       <i className="bi bi-pencil-square"></i>Edit
@@ -159,12 +159,12 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
                         url: '/users/uploadAvatar',
                         method: 'POST',
                         headers: {
-                          'Authorization': 'Bearer ' + loggedUser.user.jwt_token
+                          'Authorization': 'Bearer ' + loggedUser.jwt_token
                         },
                         ondata: (formData) => {
                           console.log("fooormDATAAA", formData)
-                          formData.append("userId", loggedUser.user._id);
-                          formData.append("avatarId", loggedUser.user.avatarId);
+                          formData.append("userId", loggedUser._id);
+                          formData.append("avatarId", loggedUser.avatarId);
                           return formData;
                         },
                         onload: async (response) => {
@@ -177,9 +177,9 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
                         }
                       },
                       revert: {
-                        url: `/users/deleteAvatar?userId=${loggedUser.user._id}`,
+                        url: `/users/deleteAvatar?userId=${loggedUser._id}`,
                         headers: {
-                          'Authorization': 'Bearer ' + loggedUser.user.jwt_token
+                          'Authorization': 'Bearer ' + loggedUser.jwt_token
                         },
                         onload: async (response) => {
                           const msg = JSON.parse(response).msg
@@ -202,7 +202,11 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
                   /> }
                 </div>
                 <hr></hr>
-                    
+                <div>
+                  <p>Email: {loggedUser.email}</p>
+                  <p>Score: {loggedUser.score}</p>
+                  <p>Registered: Přidám</p>
+                </div>
             </div>
           </div>
         </div>

@@ -69,13 +69,11 @@ router.post("/login", async (req, res) => {
             console.log(avatar)
             const token = createToken(user._id);
             res.json({
-                    user: {
-                        nickname: user.nickname,
-                        _id: user._id,
-                        avatarId: user.avatarId,
-                        jwt_token: token,
-                        score: score
-                    },
+                    nickname: user.nickname,
+                    _id: user._id,
+                    avatarId: user.avatarId,
+                    jwt_token: token,
+                    score: score,
                     avatar: avatar
                 }
             );
@@ -124,7 +122,7 @@ router.get("/getUserData", async (req, res) => {
         if (userData[0].avatarResult.length > 0) {
             avatar = userData[0].avatarResult[0].avatar
         } 
-        res.json({user, avatar})
+        res.json({...user, avatar})
         console.log("user",{user});
     } catch (err) {
         console.error(err);

@@ -26,7 +26,7 @@ function useAuthContext() {
                       console.log("Nedostali jsme žádná data.")
                       return
                   } else {
-                    data.user.jwt_token = userFromStorage.jwt_token
+                    data.jwt_token = userFromStorage.jwt_token
                     setLoggedUser(data);
                   }
               })
@@ -45,30 +45,30 @@ function useAuthContext() {
         if (!loggedUser) return
         console.log("TESSSSSSSSSTT v EEEFFECT,", loggedUser)
         let user = {
-          _id: loggedUser.user._id,
-          nickname: loggedUser.user.nickname,
-          jwt_token: loggedUser.user.jwt_token
+          _id: loggedUser._id,
+          nickname: loggedUser.nickname,
+          jwt_token: loggedUser.jwt_token
         }
         user = JSON.stringify(user)
-        console.log("USEEEEEEEEEER",loggedUser.user)
+        console.log("USEEEEEEEEEER",loggedUser)
         if (user) localStorage.setItem("user", user)
-        //localStorage.setItem("avatar", loggedUser.avatar)
     }, [loggedUser])
     
     function updateLoggedUser() {
       axiosInstance({
-          url: `users/getUserData/?userId=${loggedUser.user._id}`,
+          url: `users/getUserData/?userId=${loggedUser._id}`,
           method: "GET"
       })
       .then((data) => {
           console.log("Získana data: ", data)
-          const avatar = data.data.avatar
-          const user = data.data.user
           if(!data.data) {
               console.log("Nedostali jsme žádná data.")
               return
           } else {
-            user.jwt_token = loggedUser.user.jwt_token
+            const avatar = data.data.avatar
+            const user = data.data
+            user.avatar = avatar
+            user.jwt_token = loggedUser.jwt_token
             setLoggedUser({user, avatar})
           }
       })
