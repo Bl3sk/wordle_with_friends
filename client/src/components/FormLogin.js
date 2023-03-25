@@ -9,7 +9,7 @@ const FormLogin = ( {setDisplayForm, setLoggedUser} ) => {
   });
 
   function handleSubmit(e) {
-    //e.preventDefault()
+    e.preventDefault()
     axiosInstance({
         url: `/users/login`,
         method: "POST",
@@ -19,7 +19,7 @@ const FormLogin = ( {setDisplayForm, setLoggedUser} ) => {
         console.log(res);
         if (res.status === 200) {
           showFeedback("d-none")
-          //window.location.reload();
+          window.location.reload();
           setLoggedUser(res.data)
           console.log("RESSSSSSSSSSSSSSSSSSSSSS", res.data.data)
         }

@@ -33,6 +33,7 @@ router.post("/register", async (req, res) => {
             await libraryDao.addUser({
                 nickname: newUser.nickname,
                 email: newUser.email,
+                registered: new Date(),
                 password: hash,
                 avatarId: ""
             });
@@ -55,7 +56,7 @@ router.post("/login", async (req, res) => {
         const user = await libraryDao.getUser({nickname: inputData.nickname});
         console.log("uživatel v loginu ", user)
         if (await bcrypt.compare(inputData.password, user.password)) {
-            let userData = await libraryDao.getScoreAndAvatar({userId: user._id});
+           /* let userData = await libraryDao.getScoreAndAvatar({userId: user._id});
             console.log({userData})
             const score = userData[0].score
             let avatar;
@@ -66,15 +67,12 @@ router.post("/login", async (req, res) => {
                 avatar = userData[0].avatarResult[0].avatar
             } 
             console.log({userData})
-            console.log(avatar)
+            console.log(avatar)*/
             const token = createToken(user._id);
             res.json({
                     nickname: user.nickname,
                     _id: user._id,
-                    avatarId: user.avatarId,
                     jwt_token: token,
-                    score: score,
-                    avatar: avatar
                 }
             );
         } else {

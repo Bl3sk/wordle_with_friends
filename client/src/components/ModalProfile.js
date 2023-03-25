@@ -104,7 +104,7 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
                   {loggedUser && <span>{loggedUser.nickname}</span> }
                   <div className="dropdown-center">
                     <a className="dropdown-toggle" href="/#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      <i className="bi bi-pencil-square"></i>Edit
+                      <i className="bi bi-pencil-square edit-btn"></i>
                     </a>
                     <ul className="dropdown-menu">
                       <li><a className="dropdown-item edit-option" href="#editNickname" data-bs-toggle="collapse">Edit nickname</a> </li>
@@ -202,11 +202,22 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
                   /> }
                 </div>
                 <hr></hr>
-                <div>
-                  <p>Email: {loggedUser.email}</p>
-                  <p>Score: {loggedUser.score}</p>
-                  <p>Registered: Přidám</p>
-                </div>
+                <div class="user-info">
+                  <ul class="list-info">
+                    <li>
+                      <h3>Registered</h3>
+                      <p>{loggedUser.registered}</p>
+                    </li>
+                    <li>
+                      <h3>Email</h3>
+                      <p>{loggedUser.email}</p>
+                    </li>
+                    <li>
+                      <h3>Total Score</h3>
+                      <p>{loggedUser.score}</p>
+                    </li>
+                  </ul>
+              </div>
             </div>
           </div>
         </div>

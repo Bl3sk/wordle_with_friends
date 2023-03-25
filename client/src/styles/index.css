@@ -288,21 +288,50 @@ form > label {
   right: 0;
   pointer-events: all;
 }
-.filepond--label-action, .filepond--drop-label span {
+.edit-btn {
+  pointer-events: all;
+}
+.filepond--label-action, .filepond--drop-label span, .filepond--wrapper  {
   cursor: pointer;
 }
 .filepond--wrapper {
-  width: calc(50% - 0.5em);
-  cursor: pointer;
-}
-.filepond--file-status {
-  display: block;
+  width: 70%;
 }
 .filepond--file-status {
   width: 70%;
 }
 .filepond--credits, .filepond--panel-root, .filepond--file-info-main {
   display: none;
+}
+.user-info {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  padding-bottom: 0;
+  margin: 1rem;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+}
+.list-info {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.user-info li {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ccc;
+}
+.user-info li:last-of-type {
+  margin-bottom: 0;
+}
+.user-info h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: bold;
+}
+.user-info p {
+  margin: 0;
+  font-size: 0.9rem;
 }
 
 

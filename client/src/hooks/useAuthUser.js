@@ -6,6 +6,14 @@ function useAuthContext() {
     const [loggedUser, setLoggedUser] = useState("")
     console.log({loggedUser})
 
+    function formatDate(registered) {
+      const date = new Date(registered)
+      const day = date.getDate()
+      const month = date.getMonth()
+      const year = date.getFullYear()
+      return `${day}.${month}.${year}`
+    }
+
     // získání přihlášeného uživatele z local storage
     useEffect(() => {
         const userFromStorage = JSON.parse(localStorage.getItem("user"))
@@ -27,6 +35,8 @@ function useAuthContext() {
                       return
                   } else {
                     data.jwt_token = userFromStorage.jwt_token
+                    const formattedDate = formatDate(data.registered)
+                    data.registered = formattedDate
                     setLoggedUser(data);
                   }
               })
@@ -67,9 +77,11 @@ function useAuthContext() {
           } else {
             const avatar = data.data.avatar
             const user = data.data
+            const formattedDate = formatDate(loggedUser.registered)
             user.avatar = avatar
             user.jwt_token = loggedUser.jwt_token
-            setLoggedUser({user, avatar})
+            user.registered = formattedDate
+            setLoggedUser({...user}, {...avatar})
           }
       })
       .catch(err => {
