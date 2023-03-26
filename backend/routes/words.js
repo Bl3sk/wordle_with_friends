@@ -14,6 +14,18 @@ router.get("/", async (req, res, next) => {
     }
 })
 
+router.get("/newest", async (req, res, next) => {
+    try {
+        console.log(req.query.date)
+        const date = req.query.date
+        let words = await libraryDao.getNewestWord();
+        res.json(words[0])
+        console.log(words);
+    } catch (err) {
+        next(err);
+    }
+})
+
 router.post("/", async (req, res) => {
     const words = req.body
     try {
@@ -21,16 +33,17 @@ router.post("/", async (req, res) => {
             words
         });
     } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            msg: "Došlo k chybě."
-        })
-        return
+        next(err);
     }
     res.status(200).json({
         msg: "Data uložena.", 
         data: words
     })
 })
+
+router.use((err, req, res) => {
+    console.log(err);
+    res.status(500).json({msg: err});
+  });
 
 module.exports = router

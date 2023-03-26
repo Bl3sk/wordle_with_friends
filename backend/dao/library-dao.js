@@ -21,6 +21,13 @@ class LibraryDao {
             .findOne({ date: date })
     }
 
+    async getNewestWord() {
+        let db = await DbConnection.get(connectionString);
+        return await db
+            .collection(this.wordsCollection)
+            .find().sort({date : -1}).limit(1).toArray()
+    }
+
     async getScoreAndAvatar(filter) {
         console.log({filter})
         let db = await DbConnection.get(connectionString);

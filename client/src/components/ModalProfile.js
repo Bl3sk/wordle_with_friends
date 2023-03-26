@@ -202,8 +202,8 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
                   /> }
                 </div>
                 <hr></hr>
-                <div class="user-info">
-                  <ul class="list-info">
+                <div className="user-info">
+                  <ul className="list-info">
                     <li>
                       <h3>Registered</h3>
                       <p>{loggedUser.registered}</p>

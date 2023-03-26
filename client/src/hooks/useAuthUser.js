@@ -88,14 +88,16 @@ function useAuthContext() {
           console.log("Během získávání uživatele se něco pokazilo.", err)
       })
   }
-  
+    function updateScore (newScore) {
+      setLoggedUser({...loggedUser, [loggedUser.score]: [loggedUser.score] + newScore})
+    }
     function handleLogout() {
       localStorage.removeItem("user");
       //localStorage.removeItem("avatar");
       setLoggedUser("")
     }
   return (
-    { loggedUser, setLoggedUser, updateLoggedUser, handleLogout }
+    { loggedUser, setLoggedUser, updateLoggedUser, handleLogout, updateScore }
   )
 }
 

@@ -6,29 +6,24 @@ function useWords() {
 
     // získání slov
     useEffect(() => {
-        const date = new Date()
-        const todayDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`
+        //const date = new Date()
+        //const todayDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`
         axiosInstance({
-            url: `/words?date=${todayDate}`,
+            url: `/words/newest`,
             method: "GET",
-            data: todayDate
         })
-        .then((data) => {
-            console.log("Získana data: ", data)
-            if(!data.data) {
+        .then((res) => {
+            console.log("Získana data: ", res)
+            if(!res.data) {
                 console.log("Nedostali jsme žádná data.")
-                //location.reload()
-                localStorage.clear();
                 return
             } 
-            setSolutions(data.data.words)
+            setSolutions(res.data.words)
         })
         .catch(err => {
             console.log("Během získávání dat se něco pokazilo. ", err)
         })
       }, [])
-    
-   
   return (
     { solutions }
   )
