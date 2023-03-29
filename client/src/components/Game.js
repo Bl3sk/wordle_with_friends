@@ -7,7 +7,7 @@ import { useEffect, createContext } from "react";
 
 export const GameContext = createContext()
 
-function Game( { solutions, gameType } ) {
+function Game( { solutions, gameType, totalScore } ) {
   const { gameStatus, currWord, messageToast, handleKeyClick } = useGame(solutions ,gameType);
   useEffect(() => {
     window.addEventListener('keyup', handleKeyClick);
@@ -16,7 +16,7 @@ function Game( { solutions, gameType } ) {
   return (
     <div className="game">
       <GameContext.Provider value={gameStatus}>
-        <ResultModal solutions={ solutions } gameType={ gameType }/>
+        <ResultModal solutions={ solutions } gameType={ gameType } totalScore={ totalScore } />
         <Board currWord={ currWord }/>
         <Keyboard handleKeyClick={ handleKeyClick }/>
       </GameContext.Provider>

@@ -1,16 +1,17 @@
 import Game from './components/Game';
 import Countdown from './components/Countdown';
 import useWords from './hooks/useWords';
-import useAuthUser from './hooks/useAuthUser';
+import useAuthContext from './hooks/useAuthContext';
 import ModalProfile from "./components/ModalProfile";
 import ModalForm from "./components/ModalForm";
+import ModalLeaderboards from './components/ModalLeaderboards';
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 import * as bootstrap from 'bootstrap';
 
 function App() {
   const { solutions } = useWords()
-  const { loggedUser, setLoggedUser, updateLoggedUser, handleLogout } = useAuthUser()
+  const { loggedUser, leaderboards, setLoggedUser, updateLoggedUser, handleLogout, getLeaderboards } = useAuthContext()
   const [gameType, setGameType] = useState("classic")
   console.log(solutions, loggedUser)
   return (
@@ -28,7 +29,7 @@ function App() {
               </a>
             </li>}
             <li>
-              <a className="dropdown-item" href="/#">
+              <a className="dropdown-item" href="/#" onClick={() => { getLeaderboards() }}>
                 <i className="bi bi-trophy-fill"></i> Leaderboards
               </a>
             </li>
@@ -71,10 +72,11 @@ function App() {
       <button className={ gameType==="challenge" ? "button selected chall" : "button chall" } onClick={ () => setGameType("challenge") }>Challenge</button>
       <Countdown />
       { solutions.classic_word === null && <div><div className="spinner-border m-5" role="status"/> <p>If page is loading too long, please try to refresh the page.</p></div> }
-      { solutions.classic_word !== null && gameType==="classic" && <Game solutions={ solutions } gameType="classic" /> }
+      { solutions.classic_word !== null && gameType==="classic" && <Game solutions={ solutions } totalScore={loggedUser.score} gameType="classic" /> }
       { solutions.challenge_word !== null && gameType==="challenge" && <Game solutions={ solutions }  gameType="challenge"/> }
       <ModalForm setLoggedUser={setLoggedUser}/>
       <ModalProfile loggedUser={loggedUser} updateLoggedUser={updateLoggedUser}/>
+      <ModalLeaderboards ownScore={loggedUser.score} leaderboards={leaderboards}/>
     </div>
   );
 }

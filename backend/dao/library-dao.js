@@ -60,6 +60,13 @@ class LibraryDao {
             .findOne(filter)
     }
 
+    async listScore(filter = {}, limit = 10, sort = {}) {
+        let totalCount = await this.count(filter);
+        let result = await this._findWrapper(filter, sort, limit);
+        console.log({result})
+        result.count = totalCount
+        return {usersCount: totalCount, topScoreArr: result}
+    }
     // returns the first 1000 documents by default
     // filter param allows to filter documents by specific attributes
     // pageInfo allows to specify the page number and page size
@@ -144,7 +151,18 @@ class LibraryDao {
         let db = await DbConnection.get(connectionString);
         let status = await db
             .collection(this.usersCollection)
-            .updateOne( { _id: ObjectId(user.id) }, { $set: { [user.update.name]: user.update.data } } )
+            .updateOne( { _id: ObjectId(user.id) }, { [user.operator]: { [user.name]: user.data } } )
+        console.log({status})
+        if (!status || !status.acknowledged) {
+            throw new Error("Unexpected Error");
+        }
+    }
+    async updateScore(score) {
+        console.log("user DATA:", score)
+        let db = await DbConnection.get(connectionString);
+        let status = await db
+            .collection(this.scoresCollection)
+            .updateOne( { userId: ObjectId(score.userId) }, { [score.operator]: { [score.name]: score.data } } )
         console.log({status})
         if (!status || !status.acknowledged) {
             throw new Error("Unexpected Error");
@@ -165,7 +183,7 @@ class LibraryDao {
     async count(filter) {
         let db = await DbConnection.get(connectionString);
         return await db
-            .collection(this.wordsCollection)
+            .collection(this.scoresCollection)
             .countDocuments(filter)
         }
     // returns the array of documents according to params
@@ -173,12 +191,11 @@ class LibraryDao {
     // skip and limit allows to specify the page number and page size
     // sort param allows to specify how the documents should be sorted - by which attributes
     // options.projection param allows to load only some attributes for each book
-    async _findWrapper(filter, options, skip = 0, sort = {}, limit = 0) {
+    async _findWrapper(filter, sort = {}, limit = 0) {
         let db = await DbConnection.get(connectionString);
         return db
-            .collection(this.wordsCollection)
-            .find(filter, options)
-            .skip(skip)
+            .collection(this.scoresCollection)
+            .find(filter)
             .sort(sort)
             .limit(limit)
             .toArray()

@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { GameContext } from "./Game";
 import * as bootstrap from 'bootstrap';
 
-const Modal = ( { solutions, gameType } ) => {
+const Modal = ( { solutions, gameType, totalScore } ) => {
     const gameStatus = useContext(GameContext);
     const thumbIcon = gameStatus.status === "win" ? "bi bi-hand-thumbs-up" : "bi bi-hand-thumbs-down";
     const resultTries = gameStatus.round + "/6";
@@ -57,8 +57,8 @@ const Modal = ( { solutions, gameType } ) => {
               {result.map((row, index) => (
                 <div key={index}>{row}</div>
               ))}
-              <p>+{score}XP</p>
-              <p>Total score: 1521XP</p>
+              { gameType === "classic" && <p>+{score}</p>}
+              <p>Total score: { totalScore }</p>
               <button type="button" className="btn btn-primary m-1"><i className="bi bi-trophy-fill"></i> Leaderboards</button>
               <button type="button" className="btn btn-primary" onClick={() => {copyResult()}}  data-bs-toggle="tooltip">
                 <i className="bi bi-share-fill"></i> Share result

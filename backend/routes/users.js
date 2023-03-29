@@ -35,6 +35,7 @@ router.post("/register", async (req, res) => {
                 email: newUser.email,
                 registered: new Date(),
                 password: hash,
+                finishedWords: [],
                 avatarId: ""
             });
             res.json({
@@ -88,21 +89,18 @@ router.post("/login", async (req, res) => {
         return
     }
 })
-/*
-router.get("/getUser", async (req, res) => {
+
+router.get("/leaderboards", async (req, res) => {
     try {
-        console.log("query getUser", req.query)
-        let filter;
-        if (req.query.userId) filter = { _id: ObjectId(req.query.userId)}
-        if (req.query.nickname) filter = { nickname: (req.query.nickname)}
-        let user = await libraryDao.getUser(filter);
-        res.json(user)
-        console.log("user,",user);
+        const filter = {}
+        let score = await libraryDao.listScore(filter);
+        res.json(score)
+        console.log("score", score);
     } catch (err) {
         console.error(err);
         res.status(500).json({ msg: err });
     }
-})*/
+})
 
 router.get("/getUserData", async (req, res) => {
     try {
@@ -130,23 +128,19 @@ router.get("/getUserData", async (req, res) => {
 
 router.put('/updateUser', authenticateToken, async (req, res) => {
   try {
-    let update;
     const inputData = req.body;
     if (inputData.nickname) {
         const nicknameExist = await libraryDao.getUser({nickname: inputData.nickname});
         if (nicknameExist) {
             throw new Error('User exist') // Express will catch this on its own.
         }
-        update = {
-            name: "nickname",
-            data: inputData.nickname
-        }
     }
     console.log("inputData", inputData)
-    console.log({update})
     await libraryDao.updateUser({
         id: inputData.userId,
-        update
+        name: "nickname",
+        data: inputData.nickname,
+        operator: "$set"
     });
     res.json({ msg: "User updated." });
   } catch (err) {
@@ -160,18 +154,34 @@ router.put('/updateUser', authenticateToken, async (req, res) => {
         }
     }
 });
-/*
-router.get("/getAvatar", async (req, res, next) => {
+
+router.put('/updateScoreAndWordList', authenticateToken, async (req, res) => {
     try {
-        console.log("query getAvatar", req.query)
-        const filter = { _id: ObjectId(req.query.userId)}
-        let avatar = await libraryDao.getAvatar(filter);
-        res.json(avatar)
+      const inputData = req.body;
+      await libraryDao.updateScore({
+            userId: inputData.userId,
+            name: "score",
+            data: inputData.score,
+            operator: "$inc"
+      });
+      await libraryDao.updateUser({
+            id: inputData.userId,
+            name: "finishedWords",
+            data: inputData.wordId,
+            operator: "$push"
+    });
+      res.json({ msg: "Score updated." });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ msg: err });
-    }
-})*/
+          console.error(err);
+          if (err = "User exist") {
+              res.status(409).json({
+                  msg: err
+          })
+      }   else {
+              res.status(500).json({ msg: "Error while updating user." });
+          }
+      }
+  });
 
 router.post("/uploadAvatar", authenticateToken, upload, async (req, res) => {
     const {originalname, mimetype, size, buffer} = req.file;
@@ -182,20 +192,18 @@ router.post("/uploadAvatar", authenticateToken, upload, async (req, res) => {
         size: size,
         data: buffer
       }
-    console.log(avatarId)
+    console.log({avatarId})
     console.log(req.body)
     try {
         if (avatarId == "") {
             const addedAvatar = await libraryDao.addAvatar({
                 userId: ObjectId(userId), avatar: newAvatar
             });
-           const update = {
-                name: "avatarId",
-                data: addedAvatar.insertedId
-            }
             await libraryDao.updateUser({
                 id: userId,
-                update
+                operator: "$set",
+                name: "avatarId",
+                data: addedAvatar.insertedId
             });
         } else {
             console.log("Jdeme na update")

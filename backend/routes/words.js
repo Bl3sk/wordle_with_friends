@@ -16,8 +16,6 @@ router.get("/", async (req, res, next) => {
 
 router.get("/newest", async (req, res, next) => {
     try {
-        console.log(req.query.date)
-        const date = req.query.date
         let words = await libraryDao.getNewestWord();
         res.json(words[0])
         console.log(words);

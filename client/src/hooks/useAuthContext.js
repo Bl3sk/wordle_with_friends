@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { axiosInstance } from '../config/config'
 import jwtDecode  from 'jwt-decode'
+import * as bootstrap from 'bootstrap';
 
 function useAuthContext() {
     const [loggedUser, setLoggedUser] = useState("")
+    const [leaderboards, setLeaderboards] = useState("")
     console.log({loggedUser})
 
     function formatDate(registered) {
@@ -11,7 +13,7 @@ function useAuthContext() {
       const day = date.getDate()
       const month = date.getMonth()
       const year = date.getFullYear()
-      return `${day}.${month}.${year}`
+      return `${day}.${month + 1}.${year}`
     }
 
     // získání přihlášeného uživatele z local storage
@@ -77,7 +79,7 @@ function useAuthContext() {
           } else {
             const avatar = data.data.avatar
             const user = data.data
-            const formattedDate = formatDate(loggedUser.registered)
+            const formattedDate = formatDate(user.registered)
             user.avatar = avatar
             user.jwt_token = loggedUser.jwt_token
             user.registered = formattedDate
@@ -87,18 +89,52 @@ function useAuthContext() {
       .catch(err => {
           console.log("Během získávání uživatele se něco pokazilo.", err)
       })
-  }
-    function updateScore (newScore) {
-      setLoggedUser({...loggedUser, [loggedUser.score]: [loggedUser.score] + newScore})
+    } 
+    function handleFinishedWord (increase, wordId) {
+      axiosInstance({
+        url: '/users/updateScoreAndWordList',
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer ' + loggedUser.jwt_token
+        },
+        data: {score: increase, userId: loggedUser._id, wordId: wordId} 
+      })
+      .then((res) => {
+        console.log(res.data.msg, res);
+        //setLoggedUser({...loggedUser, score: [loggedUser.score] + increase})
+      })
+      .catch((err) => {
+        console.log(err, err.response);
+      })
     }
+
     function handleLogout() {
       localStorage.removeItem("user");
-      //localStorage.removeItem("avatar");
       setLoggedUser("")
     }
-  return (
-    { loggedUser, setLoggedUser, updateLoggedUser, handleLogout, updateScore }
-  )
-}
+    
+    function getLeaderboards () {
+      new bootstrap.Modal(document.getElementById('leaderboardsModal')).show();
+      axiosInstance({
+        url: `users/leaderboards`,
+        method: "GET"
+      })
+      .then((data) => {
+          console.log("Získana data: ", data)
+          if(!data.data) {
+              console.log("Nedostali jsme žádná data.")
+              return
+          }
+          setLeaderboards(data.data)
+      })
+      .catch(err => {
+          console.log("Během získávání uživatele se něco pokazilo.", err)
+      })
+    }
+      
+      return (
+        { loggedUser, leaderboards, setLoggedUser, updateLoggedUser, handleLogout, handleFinishedWord, getLeaderboards }
+      )
+    }
 
 export default useAuthContext

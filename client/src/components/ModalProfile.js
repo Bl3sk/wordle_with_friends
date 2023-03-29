@@ -18,7 +18,7 @@ registerPlugin(
   FilePondPluginFileValidateSize
 );
 const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
-    const { checkValidationNickname, checkValidationPassword, checkValidationRepeatedPassword, showFeedback, alert } = useFormValidation()
+    const { checkValidationNickname, showFeedback, alert } = useFormValidation()
     const [avatarImage, setAvatarImage] = useState();
     const [alreadyUsed, setAlreadyUsed] = useState({
       usedNicknames: [],
@@ -109,7 +109,6 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
                     <ul className="dropdown-menu">
                       <li><a className="dropdown-item edit-option" href="#editNickname" data-bs-toggle="collapse">Edit nickname</a> </li>
                       <li><a className="dropdown-item edit-option" href="#editAvatar" data-bs-toggle="collapse">Edit avatar</a></li>
-                      <li><a className="dropdown-item edit-option" href="#editPassword" data-bs-toggle="collapse">Edit password</a></li>
                     </ul>
                   </div> 
                 </div>   
@@ -128,18 +127,6 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
                         </div>
                     </div>     
                     <button type="submit" className="btn btn-primary p-1 m-2" value="confirm" onClick={() => handleChangeNickname()}>Confirm changes</button>
-                </div>
-                <div id="editPassword" className="collapse">
-                  <a className="collapsed" href="#editPassword" data-bs-toggle="collapse"><i className="bi bi-x-circle btn-hide"></i></a>
-                  <div className="form-floating form-container">
-                    <input type="password" className="form-control" 
-        
-                      id="floatingEditPassword" placeholder="Password" autoComplete="on" required/>
-                    <label htmlFor="floatingEditPassword">Password</label>
-                    <div className="invalid-feedback">
-                      Must be 6-30 characters long!
-                    </div>
-                  </div>
                 </div>
                 <div id="editAvatar" className="collapse">
                     <a className="collapsed" href="#editAvatar" data-bs-toggle="collapse"><i className="bi bi-x-circle btn-hide"></i></a>

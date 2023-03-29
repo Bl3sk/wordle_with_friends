@@ -3,11 +3,9 @@ import { axiosInstance } from '../config/config'
 
 function useWords() {
     const [solutions, setSolutions] = useState({  classic_word: null, challenge_word: null })
-
+    console.log({solutions})
     // získání slov
     useEffect(() => {
-        //const date = new Date()
-        //const todayDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`
         axiosInstance({
             url: `/words/newest`,
             method: "GET",
@@ -18,7 +16,9 @@ function useWords() {
                 console.log("Nedostali jsme žádná data.")
                 return
             } 
-            setSolutions(res.data.words)
+            const words = res.data.words
+            words._id = res.data._id
+            setSolutions(words)
         })
         .catch(err => {
             console.log("Během získávání dat se něco pokazilo. ", err)

@@ -1,13 +1,14 @@
 import { useEffect, useState, useRef  } from 'react'
+import useAuthContext from './useAuthContext';
 import * as bootstrap from 'bootstrap';
 
 function useGame( solutions, gameType ) {
+    const { loggedUser, handleFinishedWord } = useAuthContext()
     // npm seznam wordle slov (guessesOnly = wordlist.cache.guesses)
     const wordlist = require("wordle-wordlist")
     const allWords = wordlist.cache.all
 
     // useState pro informace o hře
-    const defaultUsedWords = [{}, {}, {}, {}, {}, {}]
     const defaultUsedKeys = {
         q: "key",
         w: "key",
@@ -36,13 +37,13 @@ function useGame( solutions, gameType ) {
         n: "key", 
         m: "key"
     }
-    const defaultGameStatus = {
-      usedWords: defaultUsedWords,
+
+    const [gameStatus, setGameStatus] = useState({
+      usedWords: [{}, {}, {}, {}, {}, {}],
       usedKeys: defaultUsedKeys,
       round: 0,
       status: "in progress"
-    }
-    const [gameStatus, setGamesStatus] = useState(defaultGameStatus)
+    })
     const [currWord, setcurrWord] = useState("")
     const solutionWord = gameType === "classic" ? solutions.classic_word : solutions.challenge_word
     const [messageToast, setMessageToast] = useState("")
@@ -50,6 +51,12 @@ function useGame( solutions, gameType ) {
     const pauseGame = useRef(false);
     const usedKeysHelper = useRef(defaultUsedKeys);
     console.log(solutionWord, "v use Game")
+
+    // update score
+    if (loggedUser && gameStatus.status !== "in progress" && gameType === "classic" && !loggedUser.finishedWords.includes(solutions._id) ) {
+      const increase = 600 - (gameStatus.round - 1) * 100
+      handleFinishedWord(increase, solutions._id)
+    } 
 
     // při reloadu stránky se získají zpět data z local storage
     useEffect(() => {     
@@ -62,8 +69,16 @@ function useGame( solutions, gameType ) {
       }
       const wordsStorage = JSON.parse(localStorage.getItem(gameType));
       if (wordsStorage == null) return
-      setGamesStatus(wordsStorage)
+      setGameStatus(wordsStorage)
     },[gameType]) 
+
+    // zobrazení Modalu na konci hry
+    useEffect(() => {
+      if (gameStatus.status !== "in progress") {
+        const myModal = new bootstrap.Modal(document.getElementById('resultModal'));
+        myModal.show();
+      }
+    }, [gameStatus.status])
 
 
     // aktualizace local storage po zadání slova, zobrazení po modalu po konci hry
@@ -93,7 +108,7 @@ function useGame( solutions, gameType ) {
           })
         }, 1950)
         setTimeout(() => {
-          setGamesStatus({
+          setGameStatus({
             ...gameStatus, 
             status: status,
             usedKeys: usedKeysHelper.current});
@@ -102,7 +117,7 @@ function useGame( solutions, gameType ) {
       // aktualizace klávesnice s delayem
       if (!objectsMatch(usedKeysHelper.current, "default") && !objectsMatch(usedKeysHelper.current, gameStatus.usedKeys)) {
         setTimeout(() => {
-          setGamesStatus({
+          setGameStatus({
             ...gameStatus, 
             usedKeys: usedKeysHelper.current
           })
@@ -122,13 +137,6 @@ function useGame( solutions, gameType ) {
         finishGame("Better luck next time!", "lose")
       }
     },[gameStatus, gameType, solutionWord])
-
-    // zobrazení Modalu na konci hry
-    useEffect(() => {    
-      if (gameStatus.status === "in progress") return; 
-      const myModal = new bootstrap.Modal(document.getElementById('resultModal'));
-      myModal.show();
-    },[gameStatus.status]) 
 
     // funkce
     const handleKeyClick = (e) => {
@@ -197,7 +205,7 @@ function useGame( solutions, gameType ) {
         const rowStyles = getLetterStyles()
         let newUsedWords = gameStatus.usedWords
         newUsedWords[gameStatus.round] = {[currWord]: rowStyles}
-        setGamesStatus({
+        setGameStatus({
           ...gameStatus, 
           usedWords: newUsedWords,
           round: gameStatus.round + 1
