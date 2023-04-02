@@ -5,7 +5,7 @@ const Row = ( {word, dataStates} ) => {
     const gameStatus = useContext(GameContext);
     const animationOption = gameStatus.status === "in progress" ? "" : " noAnimation";
     return (
-        <div className="row">
+        <div className="game-row">
             {dataStates.map((dataState, index) => {
                return <div key={index}
                     className={`${word.charAt(index) && !dataState ? "currentGuess" : "box" + animationOption}`} 

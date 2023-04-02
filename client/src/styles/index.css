@@ -5,8 +5,7 @@
 body, html {
   background: linear-gradient(to bottom, #051937, #1f2546, #363255, #4c4064, #493a66);
   background: rgb(26 115 232);
-  color: whitesmoke;
-  font-family: Verdana, sans-serif;
+  scroll-behavior: smooth;
   overflow-x: hidden;
 }
 body {
@@ -17,6 +16,11 @@ body {
   width: 100%;
   float: right;
   /*overflow-x:hidden;*/
+}
+
+.App {
+  color: whitesmoke;
+  font-family: Verdana, sans-serif;
 }
 
 button { cursor: pointer; }
@@ -109,7 +113,7 @@ hr {
 }
 
 /*       Board     */
-.row {
+.game-row {
   z-index: -1;
   text-align: center;
   display: flex;
@@ -335,6 +339,7 @@ form > label {
 }
 
 
+
 /*       Animations     */
 @keyframes flip {
   0% {
@@ -389,7 +394,7 @@ form > label {
   header div:nth-child(3) button {
     font-size: 9px
   }
-  .row div {
+  .game-row  div {
     font-size: 1.45em;
   }
   .game, .game, #root {

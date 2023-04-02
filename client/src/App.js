@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { Link } from "react-router-dom";
 import * as bootstrap from 'bootstrap';
 
+
 function App() {
   const { solutions } = useWords()
   const { loggedUser, leaderboards, setLoggedUser, updateLoggedUser, handleLogout, getLeaderboards } = useAuthContext()

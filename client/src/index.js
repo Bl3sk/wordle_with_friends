@@ -5,6 +5,7 @@ import App from './App';
 import About from './pages/About';
 import reportWebVitals from './reportWebVitals';
 import './styles/index.css';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   //<React.StrictMode>
