@@ -34,7 +34,7 @@ class LibraryDao {
         return await db
             .collection(this.scoresCollection)
             .aggregate([ 
-               /* { $match : filter },*/
+                { $match : filter },
                 { $lookup: {
                   from: "avatars",
                   localField: "userId",
@@ -52,6 +52,36 @@ class LibraryDao {
             .findOne(filter)
     }
 
+    async getLeaderboards() {
+        const db = await DbConnection.get(connectionString);
+        return await db.collection(this.scoresCollection).aggregate([
+          {
+            $sort: { score: -1 }
+          },
+          {
+            $limit: 5
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "userId",
+              foreignField: "_id",
+              as: "user"
+            }
+          },
+          {
+            $project: {
+              _id: "$userId",
+              nickname: { $arrayElemAt: ["$user.nickname", 0] },
+              score: 1
+            }
+          }
+        ]).toArray();
+      }
+      
+      
+      
+
     async getAvatar(filter) {
         console.log("GET AVATAR", filter)
         let db = await DbConnection.get(connectionString);
@@ -64,7 +94,6 @@ class LibraryDao {
         let totalCount = await this.count(filter);
         let result = await this._findWrapper(filter, sort, limit);
         console.log({result})
-        result.count = totalCount
         return {usersCount: totalCount, topScoreArr: result}
     }
     // returns the first 1000 documents by default

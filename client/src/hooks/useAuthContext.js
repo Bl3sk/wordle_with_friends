@@ -101,7 +101,11 @@ function useAuthContext() {
       })
       .then((res) => {
         console.log(res.data.msg, res);
-        //setLoggedUser({...loggedUser, score: [loggedUser.score] + increase})
+        const newFinishedWords = [...loggedUser.finishedWords]
+        newFinishedWords.push(wordId)
+        setLoggedUser({...loggedUser, score: 5555,
+          finishedWords: newFinishedWords});
+             
       })
       .catch((err) => {
         console.log(err, err.response);

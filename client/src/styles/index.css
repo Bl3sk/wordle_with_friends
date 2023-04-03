@@ -338,6 +338,35 @@ form > label {
   font-size: 0.9rem;
 }
 
+/*       Leaderboards     */
+.leaderboards-table {
+  margin: 1.5rem;
+}
+
+table {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+th,
+td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #ddd;
+}
+
 
 
 /*       Animations     */

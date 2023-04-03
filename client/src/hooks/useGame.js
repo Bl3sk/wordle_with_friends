@@ -146,7 +146,7 @@ function useGame( solutions, gameType ) {
         key = key.toLowerCase()
         if(currWord.length >= 5 && key !== "enter" && key !== "backspace") return
         if(currWord.length < 5 && key === "enter") {
-          const rows = document.getElementsByClassName("row")
+          const rows = document.getElementsByClassName("game-row")
           rows[gameStatus.round].classList.add("invalidWord")
           setTimeout(() => {
             rows[gameStatus.round].classList.remove("invalidWord")

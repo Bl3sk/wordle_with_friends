@@ -92,10 +92,9 @@ router.post("/login", async (req, res) => {
 
 router.get("/leaderboards", async (req, res) => {
     try {
-        const filter = {}
-        let score = await libraryDao.listScore(filter);
-        res.json(score)
-        console.log("score", score);
+        const leaderboards = await libraryDao.getLeaderboards();
+        res.json(leaderboards)
+        console.log("leaderboards", leaderboards);
     } catch (err) {
         console.error(err);
         res.status(500).json({ msg: err });
