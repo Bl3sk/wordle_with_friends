@@ -91,6 +91,8 @@ function useAuthContext() {
       })
     } 
     function handleFinishedWord (increase, wordId) {
+      if (loggedUser.finishedWords === undefined) return
+      if (!loggedUser || loggedUser.finishedWords.includes(wordId)) return
       axiosInstance({
         url: '/users/updateScoreAndWordList',
         method: 'PUT',
@@ -103,7 +105,7 @@ function useAuthContext() {
         console.log(res.data.msg, res);
         const newFinishedWords = [...loggedUser.finishedWords]
         newFinishedWords.push(wordId)
-        setLoggedUser({...loggedUser, score: 5555,
+        setLoggedUser({...loggedUser, score: loggedUser.score + increase,
           finishedWords: newFinishedWords});
              
       })
@@ -118,6 +120,9 @@ function useAuthContext() {
     }
     
     function getLeaderboards () {
+      const modal = document.querySelector('#resultModal');
+      modal.style.display = 'none';
+      document.querySelector('.modal-backdrop').style.display = 'none';
       new bootstrap.Modal(document.getElementById('leaderboardsModal')).show();
       axiosInstance({
         url: `users/leaderboards`,

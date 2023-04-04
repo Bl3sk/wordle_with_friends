@@ -21,7 +21,7 @@ const FormLogin = ( {setDisplayForm, setLoggedUser} ) => {
           showFeedback("d-none")
           window.location.reload();
           setLoggedUser(res.data)
-          console.log("RESSSSSSSSSSSSSSSSSSSSSS", res.data.data)
+          console.log("RESSSSSSSSSSSSSSSSSSSSSS", res.data)
         }
       })
       .catch((err) => {

@@ -12,7 +12,7 @@ import * as bootstrap from 'bootstrap';
 
 function App() {
   const { solutions } = useWords()
-  const { loggedUser, leaderboards, setLoggedUser, updateLoggedUser, handleLogout, getLeaderboards } = useAuthContext()
+  const { loggedUser, leaderboards, setLoggedUser, updateLoggedUser, handleLogout, getLeaderboards, handleFinishedWord } = useAuthContext()
   const [gameType, setGameType] = useState("classic")
   console.log(solutions, loggedUser)
   return (
@@ -73,8 +73,8 @@ function App() {
       <button className={ gameType==="challenge" ? "button selected chall" : "button chall" } onClick={ () => setGameType("challenge") }>Challenge</button>
       <Countdown />
       { solutions.classic_word === null && <div><div className="spinner-border m-5" role="status"/> <p>If page is loading too long, please try to refresh the page.</p></div> }
-      { solutions.classic_word !== null && gameType==="classic" && <Game solutions={ solutions } totalScore={loggedUser.score} gameType="classic" /> }
-      { solutions.challenge_word !== null && gameType==="challenge" && <Game solutions={ solutions }  gameType="challenge"/> }
+      { solutions.classic_word !== null && gameType==="classic" && <Game solutions={ solutions } totalScore={loggedUser.score} gameType="classic" handleFinishedWord={handleFinishedWord} getLeaderboards={getLeaderboards} /> }
+      { solutions.challenge_word !== null && gameType==="challenge" && <Game solutions={ solutions }  gameType="challenge" getLeaderboards={getLeaderboards}/> }
       <ModalForm setLoggedUser={setLoggedUser}/>
       <ModalProfile loggedUser={loggedUser} updateLoggedUser={updateLoggedUser}/>
       <ModalLeaderboards ownScore={loggedUser.score} leaderboards={leaderboards}/>

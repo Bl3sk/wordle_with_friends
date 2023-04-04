@@ -1,9 +1,6 @@
 import { useEffect, useState, useRef  } from 'react'
-import useAuthContext from './useAuthContext';
 import * as bootstrap from 'bootstrap';
-
-function useGame( solutions, gameType ) {
-    const { loggedUser, handleFinishedWord } = useAuthContext()
+function useGame( solutions, gameType, handleFinishedWord ) {
     // npm seznam wordle slov (guessesOnly = wordlist.cache.guesses)
     const wordlist = require("wordle-wordlist")
     const allWords = wordlist.cache.all
@@ -53,7 +50,7 @@ function useGame( solutions, gameType ) {
     console.log(solutionWord, "v use Game")
 
     // update score
-    if (loggedUser && gameStatus.status !== "in progress" && gameType === "classic" && !loggedUser.finishedWords.includes(solutions._id) ) {
+    if (gameStatus.status !== "in progress" && gameType === "classic"  ) {
       const increase = 600 - (gameStatus.round - 1) * 100
       handleFinishedWord(increase, solutions._id)
     } 
