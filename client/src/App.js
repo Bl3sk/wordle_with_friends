@@ -72,7 +72,7 @@ function App() {
       <button className={ gameType==="classic" ? "button selected classic" : "button classic" } onClick={ () => setGameType("classic") }>Classic</button>
       <button className={ gameType==="challenge" ? "button selected chall" : "button chall" } onClick={ () => setGameType("challenge") }>Challenge</button>
       <Countdown />
-      { solutions.classic_word === null && <div><div className="spinner-border m-5" role="status"/> <p>If page is loading too long, please try to refresh the page.</p></div> }
+      { solutions.classic_word === null && <div><div className="spinner-border m-5" role="status"/> <p>Please wait, it takes around 30 seconds to start backend server on Render(hosting).</p></div> }
       { solutions.classic_word !== null && gameType==="classic" && <Game solutions={ solutions } totalScore={loggedUser.score} gameType="classic" handleFinishedWord={handleFinishedWord} getLeaderboards={getLeaderboards} /> }
       { solutions.challenge_word !== null && gameType==="challenge" && <Game solutions={ solutions }  gameType="challenge" getLeaderboards={getLeaderboards}/> }
       <ModalForm setLoggedUser={setLoggedUser}/>

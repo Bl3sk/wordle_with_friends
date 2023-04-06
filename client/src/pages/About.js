@@ -60,15 +60,11 @@ const About = () => {
                     
                     <div className="col-sm-4">
                         <h2>Edit profile</h2>
-                        <h5>Title description, Sep 2, 2020</h5>
-                        <div className="fakeimg">Fake Image</div>
                         <p>Some text..</p>
                         <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
                     </div>
                     <div className="col-sm-4">
                         <h2>Leaderboards</h2>
-                        <h5>Title description, Sep 2, 2020</h5>
-                        <div className="fakeimg">Fake Image</div>
                         <p>Some text..</p>
                         <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
                     </div>
