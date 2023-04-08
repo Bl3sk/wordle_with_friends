@@ -101,7 +101,7 @@ router.get("/leaderboards", async (req, res) => {
     }
 })
 
-router.get("/getUserData", async (req, res) => {
+router.get("/userdata", async (req, res) => {
     try {
         console.log("query getUserDAta", req.query)
         const userfilter = { _id: ObjectId(req.query.userId)}
@@ -125,7 +125,7 @@ router.get("/getUserData", async (req, res) => {
     }
 })
 
-router.put('/updateUser', authenticateToken, async (req, res) => {
+router.put('/user', authenticateToken, async (req, res) => {
   try {
     const inputData = req.body;
     if (inputData.nickname) {
@@ -154,7 +154,7 @@ router.put('/updateUser', authenticateToken, async (req, res) => {
     }
 });
 
-router.put('/updateScoreAndWordList', authenticateToken, async (req, res) => {
+router.put('/score', authenticateToken, async (req, res) => {
     try {
       const inputData = req.body;
       await libraryDao.updateScore({
@@ -219,17 +219,15 @@ router.post("/uploadAvatar", authenticateToken, upload, async (req, res) => {
     }
 })
 
-router.delete("/deleteAvatar", authenticateToken, async (req, res) => {
+router.delete("/avatar", authenticateToken, async (req, res) => {
     try {
         console.log("query delete", req.query)
         await libraryDao.deleteAvatar(ObjectId(req.query.userId));
-        const update = {
-            name: "avatarId",
-            data: ""
-        }
         await libraryDao.updateUser({
             id: req.query.userId,
-            update
+            operator: "$set",
+            name: "avatarId",
+            data: ""
         });
         res.json({ msg: "Avatar deleted." });
     } catch (err) {

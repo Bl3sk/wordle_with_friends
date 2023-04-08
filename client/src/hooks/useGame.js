@@ -51,6 +51,7 @@ function useGame( solutions, gameType, handleFinishedWord ) {
 
     // update score
     if (gameStatus.status !== "in progress" && gameType === "classic"  ) {
+      console.log("JDEME NA UPDATE SCOREEEEEEEEEEEEEEEEEEEEEEE")
       const increase = 600 - (gameStatus.round - 1) * 100
       handleFinishedWord(increase, solutions._id)
     } 
