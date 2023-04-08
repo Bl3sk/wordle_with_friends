@@ -96,30 +96,8 @@ class LibraryDao {
         console.log({result})
         return {usersCount: totalCount, topScoreArr: result}
     }
-    // returns the first 1000 documents by default
-    // filter param allows to filter documents by specific attributes
-    // pageInfo allows to specify the page number and page size
-    // sort param allows to specify how the documents should be sorted - by which attributes
-    // projection param allows to load only some attributes for each book
-    async listBooks(filter = {}, pageInfo = {}, sort = {}, projection = {}) {
-        let pageIndex = pageInfo["pageIndex"] ? pageInfo["pageIndex"] : 0;
-        let pageSize = pageInfo["pageSize"] ? pageInfo["pageSize"] : 1000;
-        let totalCount = await this.count(filter);
-        let result = await this._findWrapper(filter, {projection}, pageIndex *
-            pageSize, sort, pageSize);
-        if (result.code) {
-            return result;
-        } else {
-            return {
-            itemList: result,
-            pageInfo: {
-            pageIndex: pageIndex,
-            pageSize: pageSize,
-            total: totalCount,
-                },
-            };
-        }
-    }
+
+
     // delete
     async deleteAvatar(id) {
         let db = await DbConnection.get(connectionString);
@@ -215,11 +193,7 @@ class LibraryDao {
             .collection(this.scoresCollection)
             .countDocuments(filter)
         }
-    // returns the array of documents according to params
-    // filter param allows to filter documents by specific attributes
-    // skip and limit allows to specify the page number and page size
-    // sort param allows to specify how the documents should be sorted - by which attributes
-    // options.projection param allows to load only some attributes for each book
+
     async _findWrapper(filter, sort = {}, limit = 0) {
         let db = await DbConnection.get(connectionString);
         return db

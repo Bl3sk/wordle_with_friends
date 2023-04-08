@@ -50,7 +50,7 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
 
     function handleChangeNickname() {
       axiosInstance({
-        url: '/users/updateUser',
+        url: '/users/user',
         method: 'PUT',
         headers: {
           'Authorization': 'Bearer ' + loggedUser.jwt_token
@@ -164,7 +164,7 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
                         }
                       },
                       revert: {
-                        url: `/users/deleteAvatar?userId=${loggedUser._id}`,
+                        url: `/users/avatar?userId=${loggedUser._id}`,
                         headers: {
                           'Authorization': 'Bearer ' + loggedUser.jwt_token
                         },

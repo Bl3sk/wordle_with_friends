@@ -26,7 +26,7 @@ function useAuthContext() {
             const currentTime = Date.now() / 1000; // převedení na vteřiny
             if (decoded.exp > currentTime) {
               axiosInstance({
-                url: `users/getUserData/?userId=${userFromStorage._id}`,
+                url: `users/userdata/?userId=${userFromStorage._id}`,
                 method: "GET"
             })
               .then((res) => {
@@ -68,7 +68,7 @@ function useAuthContext() {
     
     function updateLoggedUser() {
       axiosInstance({
-          url: `users/getUserData/?userId=${loggedUser._id}`,
+          url: `users/userdata/?userId=${loggedUser._id}`,
           method: "GET"
       })
       .then((data) => {
@@ -94,7 +94,7 @@ function useAuthContext() {
       if (loggedUser.finishedWords === undefined) return
       if (!loggedUser || loggedUser.finishedWords.includes(wordId)) return
       axiosInstance({
-        url: '/users/updateScoreAndWordList',
+        url: '/users/score',
         method: 'PUT',
         headers: {
           'Authorization': 'Bearer ' + loggedUser.jwt_token
@@ -120,9 +120,13 @@ function useAuthContext() {
     }
     
     function getLeaderboards () {
-      const modal = document.querySelector('#resultModal');
-      modal.style.display = 'none';
-      document.querySelector('.modal-backdrop').style.display = 'none';
+      const modalBackdrop = document.querySelector('.modal-backdrop')
+      if (modalBackdrop) {
+        const modalResult = document.querySelector('#resultModal');
+        console.log(document.querySelector('.modal-backdrop'))
+        modalResult.style.display = 'none';
+        modalBackdrop.style.display = 'none';
+      }
       new bootstrap.Modal(document.getElementById('leaderboardsModal')).show();
       axiosInstance({
         url: `users/leaderboards`,

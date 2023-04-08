@@ -34,11 +34,11 @@ function App() {
                 <i className="bi bi-trophy-fill"></i> Leaderboards
               </a>
             </li>
-            <li>
-              <a className="dropdown-item" href="/#">
+            {/* <li>
+              <a className="dropdown-item" href="/#" >
                 <i className="bi bi-gear-fill"></i> Settings
               </a>
-            </li>
+            </li> */}
             <div className="dropdown-divider"></div>
             <li>
               <Link className="dropdown-item" to="/about"><i className="bi bi-info-circle-fill"></i> About game</Link>
