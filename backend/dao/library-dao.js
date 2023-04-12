@@ -70,9 +70,18 @@ class LibraryDao {
             }
           },
           {
+            $lookup: {
+              from: "avatars",
+              localField: "userId",
+              foreignField: "userId",
+              as: "avatar"
+            }
+          },
+          {
             $project: {
               _id: "$userId",
               nickname: { $arrayElemAt: ["$user.nickname", 0] },
+              avatar:  { $arrayElemAt: ["$avatar.avatar", 0] },
               score: 1
             }
           }

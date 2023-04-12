@@ -17,7 +17,7 @@ const ModalLeaderboards = ( {ownScore, leaderboards} ) => {
                     <thead>
                       <tr>
                         <th>Rank</th>
-                        <th>Nickname</th>
+                        <th>Player</th>
                         <th>Score</th>
                       </tr>
                     </thead>
@@ -26,7 +26,13 @@ const ModalLeaderboards = ( {ownScore, leaderboards} ) => {
                         {leaderboards && leaderboards.map((player, index) => (
                           <tr key={player._id}>
                             <td>{index + 1}.</td>
-                            <td>{player.nickname}</td>
+                            <td> 
+                              <img 
+                                src={player.avatar ? `data:${player.avatar.type};base64,${player.avatar.data}` : process.env.PUBLIC_URL + "/wordle_icon.jpg"} 
+                                alt="Avatar" 
+                                style = {{width: "2rem", marginRight: "0.2rem"}}/>
+                              {player.nickname}
+                            </td>
                             <td>{player.score}</td>
                           </tr>
                         ))}

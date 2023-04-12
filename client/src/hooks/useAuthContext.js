@@ -138,6 +138,7 @@ function useAuthContext() {
               console.log("Nedostali jsme žádná data.")
               return
           }
+          console.log("Jdeme změnit Leaderboards")
           setLeaderboards(data.data)
       })
       .catch(err => {
