@@ -28,13 +28,9 @@ class WordChecker {
   }
   async insertWord () {
     const newClassic = this.getRandomWord();
-    const newChallenge = this.getRandomWord();
     try {
       await libraryDao.addWords({
-        words: {
-          classic_word: newClassic,
-          challenge_word: newChallenge,
-        },
+        words: newClassic,
         date: new Date(),
       });
     } catch (error) {

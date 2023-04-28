@@ -66,7 +66,7 @@ const Modal = ( { solutions, gameType, totalScore, getLeaderboards } ) => {
               </button>
             </div>
             <div className="bg-primary bg-gradient text-white p-2">
-             <p className="m-1">Solution: { gameType === "classic" ? solutions.classic_word.toUpperCase() : solutions.challenge_word.toUpperCase() }</p>
+             <p className="m-1">Solution: { gameType === "classic" ? solutions.words.toUpperCase() : solutions.words.toUpperCase() }</p>
             </div>
           </div>
         </div>

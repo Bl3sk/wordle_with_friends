@@ -52,6 +52,15 @@ class LibraryDao {
             .findOne(filter)
     }
 
+    async getUsers(filter) {
+        let db = await DbConnection.get(connectionString);
+        return await db
+          .collection(this.usersCollection)
+          .distinct('nickname', { nickname: new RegExp(filter, 'i') });
+      }
+      
+      
+
     async getLeaderboards() {
         const db = await DbConnection.get(connectionString);
         return await db.collection(this.scoresCollection).aggregate([
@@ -168,6 +177,17 @@ class LibraryDao {
         let status = await db
             .collection(this.usersCollection)
             .updateOne( { _id: ObjectId(user.id) }, { [user.operator]: { [user.name]: user.data } } )
+        console.log({status})
+        if (!status || !status.acknowledged) {
+            throw new Error("Unexpected Error");
+        }
+    }
+    async updateChallenge(data) {
+        console.log("user DATA:", data)
+        let db = await DbConnection.get(connectionString);
+        let status = await db
+            .collection(this.usersCollection)
+            .updateOne( { nickname: data.nickname}, { $set: { "challengeWord": data.word } } )
         console.log({status})
         if (!status || !status.acknowledged) {
             throw new Error("Unexpected Error");

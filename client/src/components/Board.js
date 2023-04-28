@@ -6,7 +6,7 @@ const Board = ( { currWord }) => {
   const gameStatus = useContext(GameContext);
   let currWordRendered = false;
     return (
-        <div className="board">
+        <div className="board mb-3">
         { gameStatus.usedWords.map((wordObj, index) => {
           const word = Object.keys(wordObj)[0]
           if(!word && !currWordRendered) {

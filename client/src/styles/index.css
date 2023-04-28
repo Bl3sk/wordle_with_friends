@@ -367,6 +367,23 @@ tr:hover {
   background-color: #ddd;
 }
 
+/*       Challenge     */
+
+.user-search ul, li {
+  list-style-type: none;
+  padding: 0;
+}
+.user-search li {
+  cursor: pointer;
+  background-color: #f2f2f2;
+  width: 8rem;
+  color: #333;
+}
+.user-search li:hover {
+  background-color: #ccc;
+  color: #fff;
+}
+
 
 
 /*       Animations     */

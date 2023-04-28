@@ -90,7 +90,30 @@ function useAuthContext() {
           console.log("Během získávání uživatele se něco pokazilo.", err)
       })
     } 
-    function handleFinishedWord (increase, wordId) {
+
+    function handleFinishedChallenge() {
+      localStorage.removeItem("challenge");
+      axiosInstance({
+        url: `/words/challenge?word=&nickname=${loggedUser.nickname}`,
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer ' + loggedUser.jwt_token
+        }
+      })
+      .then((res) => {
+        console.log("Challenge vymazána.")             
+      })
+      .catch((err) => {
+        console.log(err, err.response);
+      })
+    }
+
+    function handleFinishedWord (increase, wordId, gameType) {
+      console.log(gameType)
+      if (gameType === "challenge") {
+        handleFinishedChallenge()
+        return
+      }
       if (loggedUser.finishedWords === undefined) return
       if (!loggedUser || loggedUser.finishedWords.includes(wordId)) return
       axiosInstance({
@@ -113,6 +136,7 @@ function useAuthContext() {
         console.log(err, err.response);
       })
     }
+
 
     function handleLogout() {
       localStorage.removeItem("user");
@@ -147,7 +171,7 @@ function useAuthContext() {
     }
       
       return (
-        { loggedUser, leaderboards, setLoggedUser, updateLoggedUser, handleLogout, handleFinishedWord, getLeaderboards }
+        { loggedUser, leaderboards, setLoggedUser, updateLoggedUser, handleLogout, handleFinishedWord, handleFinishedChallenge, getLeaderboards }
       )
     }
 

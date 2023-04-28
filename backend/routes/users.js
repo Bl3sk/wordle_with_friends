@@ -125,6 +125,18 @@ router.get("/userdata", async (req, res) => {
     }
 })
 
+router.get("/search", async (req, res) => {
+    try {
+        const searchString = req.query.q;
+        const users = await libraryDao.getUsers(searchString);
+        res.json(users)
+        console.log("users", users);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: err });
+    }
+})
+
 router.put('/user', authenticateToken, async (req, res) => {
   try {
     const inputData = req.body;

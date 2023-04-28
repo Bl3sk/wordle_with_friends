@@ -1,5 +1,6 @@
 const express = require("express")
 const libraryDao = require("../dao/library-dao");
+const wordlist = require("wordle-wordlist");
 const router = express.Router()
 
 router.get("/", async (req, res, next) => {
@@ -24,7 +25,7 @@ router.get("/newest", async (req, res, next) => {
     }
 })
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
     const words = req.body
     try {
         await libraryDao.addWords({
@@ -39,9 +40,42 @@ router.post("/", async (req, res) => {
     })
 })
 
-router.use((err, req, res) => {
+router.put("/challenge", async (req, res, next) => {
+    console.log("PUTTT")
+    const wordsArr = wordlist.cache.answers;
+    const word = req.query.word;
+    const nickname = req.query.nickname
+    const user = await libraryDao.getUser({nickname: nickname});
+    console.log({word})
+    console.log({user})
+    if (!user || !wordsArr.includes(word)) {
+        res.status(404).json({
+            msg: "User or word dont exist!"
+        })  
+        return
+    }
+    if (user.challengeWord !== "" && word) {
+        res.status(409).json({
+            msg: "User already have a challenge!"
+        })  
+        return
+    }
+    try {
+        await libraryDao.updateChallenge({
+            word, nickname
+        });
+    } catch (error) {
+        next(err);
+    }
+    res.status(200).json({
+        msg: "Chalennge přidělena."
+    })
+})
+
+router.use((err, req, res, next) => {
     console.log(err);
     res.status(500).json({msg: err});
   });
+  
 
 module.exports = router

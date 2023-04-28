@@ -5,6 +5,7 @@ import useAuthContext from './hooks/useAuthContext';
 import ModalProfile from "./components/ModalProfile";
 import ModalForm from "./components/ModalForm";
 import ModalLeaderboards from './components/ModalLeaderboards';
+import Challenge from './components/Challenge';
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 import * as bootstrap from 'bootstrap';
@@ -71,10 +72,11 @@ function App() {
       <hr/>
       <button className={ gameType==="classic" ? "button selected classic" : "button classic" } onClick={ () => setGameType("classic") }>Classic</button>
       <button className={ gameType==="challenge" ? "button selected chall" : "button chall" } onClick={ () => setGameType("challenge") }>Challenge</button>
-      <Countdown />
-      { solutions.classic_word === null && <div><div className="spinner-border m-5" role="status"/> <p>Please wait, it takes around 30 seconds to start backend server on Render(hosting).</p></div> }
-      { solutions.classic_word !== null && gameType==="classic" && <Game solutions={ solutions } totalScore={loggedUser.score} gameType="classic" handleFinishedWord={handleFinishedWord} getLeaderboards={getLeaderboards} /> }
-      { solutions.challenge_word !== null && gameType==="challenge" && <Game solutions={ solutions }  gameType="challenge" getLeaderboards={getLeaderboards}/> }
+      { gameType === "classic" && <Countdown />}
+      { solutions.words === null && <div><div className="spinner-border m-5" role="status"/> <p>Please wait, it takes around 30 seconds to start backend server on Render(hosting).</p></div> }
+      { solutions.words !== null && gameType==="classic" && <Game solutions={ solutions } totalScore={loggedUser.score} gameType="classic" handleFinishedWord={handleFinishedWord} getLeaderboards={getLeaderboards} /> }
+      { !loggedUser && gameType==="challenge" && <div><p>This content is only for logged users. Please login.</p></div> }
+      { loggedUser && gameType==="challenge" && <Challenge loggedUser={loggedUser} handleFinishedWord={handleFinishedWord} getLeaderboards={getLeaderboards}/> }
       <ModalForm setLoggedUser={setLoggedUser}/>
       <ModalProfile loggedUser={loggedUser} updateLoggedUser={updateLoggedUser}/>
       <ModalLeaderboards ownScore={loggedUser.score} leaderboards={leaderboards}/>

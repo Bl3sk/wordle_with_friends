@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { axiosInstance } from '../config/config'
 
 function useWords() {
-    const [solutions, setSolutions] = useState({  classic_word: null, challenge_word: null })
+    const [solutions, setSolutions] = useState({  words: null })
     console.log({solutions})
     // získání slov
     useEffect(() => {
@@ -16,9 +16,8 @@ function useWords() {
                 console.log("Nedostali jsme žádná data.")
                 return
             } 
-            const words = res.data.words
-            words._id = res.data._id
-            setSolutions(words)
+            const word = {words: res.data.words, _id: res.data._id  }
+            setSolutions(word)
         })
         .catch(err => {
             console.log("Během získávání dat se něco pokazilo. ", err)
