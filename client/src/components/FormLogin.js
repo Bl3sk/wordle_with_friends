@@ -19,9 +19,9 @@ const FormLogin = ( {setDisplayForm, setLoggedUser} ) => {
         console.log(res);
         if (res.status === 200) {
           showFeedback("d-none")
-          window.location.reload();
           setLoggedUser(res.data)
           console.log("RESSSSSSSSSSSSSSSSSSSSSS", res.data)
+          window.location.reload();
         }
       })
       .catch((err) => {

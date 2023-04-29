@@ -95,7 +95,7 @@ function useAuthContext() {
       localStorage.removeItem("challenge");
       axiosInstance({
         url: `/words/challenge?word=&nickname=${loggedUser.nickname}`,
-        method: 'PUT',
+        method: 'DELETE',
         headers: {
           'Authorization': 'Bearer ' + loggedUser.jwt_token
         }

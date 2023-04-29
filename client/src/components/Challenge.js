@@ -70,7 +70,7 @@ function Challenge({loggedUser, handleFinishedWord, getLeaderboards}) {
               <input type="text" className="form-control" value={nicknameValue} placeholder="Nickname" aria-label="Nickname" onChange={handleSearchChange} autoComplete="off"/>
               <input type="text" className="form-control" value={wordValue} placeholder="Word" aria-label="Word" onChange={handleWordChange}/>
               <div className="input-group-append">
-                <button className="btn btn-dark" type="button" onClick={handleSubmitChallenge}>Challenge friend</button>
+                <button className="btn btn-dark" type="button" onClick={handleSubmitChallenge}>Send</button>
               </div>
               <div id="alertChallenge" className="invalid-feedback d-none text-center text-dark">
                 User or word dont exist!
@@ -80,7 +80,7 @@ function Challenge({loggedUser, handleFinishedWord, getLeaderboards}) {
               <ul>
                 {searchResults.map(user => {
                     if (user === nicknameValue) return null
-                    return <li key={user._id} onClick={() => {handleUserSelect(user)}}>{user}</li>
+                    return <li key={user} onClick={() => {handleUserSelect(user)}}>{user}</li>
                 })}
               </ul>
             </div>

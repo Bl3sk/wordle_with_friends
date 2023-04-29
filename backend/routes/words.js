@@ -72,6 +72,23 @@ router.put("/challenge", async (req, res, next) => {
     })
 })
 
+router.delete("/challenge", async (req, res, next) => {
+    console.log("delete")
+    const word = ""
+    const nickname = req.query.nickname
+    console.log({word})
+    try {
+        await libraryDao.updateChallenge({
+            word, nickname
+        });
+    } catch (error) {
+        next(err);
+    }
+    res.status(200).json({
+        msg: "Chalennge přidělena."
+    })
+})
+
 router.use((err, req, res, next) => {
     console.log(err);
     res.status(500).json({msg: err});
