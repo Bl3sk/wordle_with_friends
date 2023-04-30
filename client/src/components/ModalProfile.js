@@ -29,11 +29,11 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
       password: "",
       repeatedPassword: ""
     })
-    console.log({editData})
+    //console.log({editData})
     const pond = useRef(null);
-    console.log("avatarImage", avatarImage)
-    console.log("User", loggedUser)
-    console.log("userAvatar",loggedUser.avatar)
+    //console.log("avatarImage", avatarImage)
+   // console.log("User", loggedUser)
+    //console.log("userAvatar",loggedUser.avatar)
 
     const dropdownItems = document.querySelectorAll('.edit-option');
     dropdownItems.forEach(item => {
@@ -58,8 +58,8 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
         data: {...editData, userId: loggedUser._id} 
       })
       .then((res) => {
-        console.log(res.data.msg, res);
-        console.log(res.status)
+        //console.log(res.data.msg, res);
+        //console.log(res.status)
         if (res.status === 200) {
           const alertPlaceholder = document.getElementById('editNicknameAlert')
           alert(alertPlaceholder, 'Your nickname has been succesfully changed!', 'success')
@@ -67,9 +67,9 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
         }
       })
       .catch((err) => {
-        console.log(err, err.response);
+        //console.log(err, err.response);
         const usedData = err.response.data.data;
-        console.log(usedData)
+        //console.log(usedData)
         const nicknamesArr = [...alreadyUsed.usedNicknames]
         if (err.response.status === 409) nicknamesArr.push(editData.nickname)
         setAlreadyUsed({
@@ -149,14 +149,14 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
                           'Authorization': 'Bearer ' + loggedUser.jwt_token
                         },
                         ondata: (formData) => {
-                          console.log("fooormDATAAA", formData)
+                          //console.log("fooormDATAAA", formData)
                           formData.append("userId", loggedUser._id);
                           formData.append("avatarId", loggedUser.avatarId);
                           return formData;
                         },
                         onload: async (response) => {
                           const msg = JSON.parse(response).msg
-                          console.log({msg})
+                          //console.log({msg})
                           if(msg === "User updated.") {
                             setAvatarImage()
                             updateLoggedUser()

@@ -16,16 +16,16 @@ const FormLogin = ( {setDisplayForm, setLoggedUser} ) => {
         data: loginData
       })
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         if (res.status === 200) {
           showFeedback("d-none")
           setLoggedUser(res.data)
-          console.log("RESSSSSSSSSSSSSSSSSSSSSS", res.data)
+          //console.log("RESSSSSSSSSSSSSSSSSSSSSS", res.data)
           window.location.reload();
         }
       })
       .catch((err) => {
-        console.log(err)
+        //console.log(err)
         showFeedback("d-block")
       })
   }

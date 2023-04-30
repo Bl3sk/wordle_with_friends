@@ -6,7 +6,7 @@ function Challenge({loggedUser, handleFinishedWord, getLeaderboards}) {
   const [searchResults, setSearchResults] = useState([]);
   const [nicknameValue, setNicknameValue] = useState("");
   const [wordValue, setWordValue] = useState("");
-  console.log(searchResults, nicknameValue) 
+  //console.log(searchResults, nicknameValue) 
 
   const handleSearchChange = (event) => {
     const value = event.target.value;
@@ -27,7 +27,7 @@ function Challenge({loggedUser, handleFinishedWord, getLeaderboards}) {
 
   const handleUserSelect = (user) => {
     setNicknameValue(user) 
-    console.log(user);
+    //console.log(user);
   };
 
   const showAlert = (text) => {
@@ -43,15 +43,15 @@ function Challenge({loggedUser, handleFinishedWord, getLeaderboards}) {
       method: "PUT"
     })
       .then(response => {
-        console.log(response.data)
+        //console.log(response.data)
         showAlert("User received challenge!")
         setNicknameValue("")
         setWordValue("")
         setSearchResults([])
       })
       .catch(error => {
-        console.log(error)
-        console.log(error.response.status)
+        //console.log(error)
+        //console.log(error.response.status)
         if (error.response.status === 404) {
           showAlert("User or word dont exist!")
         }

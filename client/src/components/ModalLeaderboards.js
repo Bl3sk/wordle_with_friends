@@ -1,7 +1,7 @@
 import React from "react"
 
 const ModalLeaderboards = ( {ownScore, leaderboards} ) => {
-  console.log(leaderboards)
+  //console.log(leaderboards)
     return ( 
         <div className="modal fade text-dark" id="leaderboardsModal" aria-labelledby="leaderboardsModalLabel" aria-hidden="true">
           <div className="modal-dialog">

@@ -15,7 +15,7 @@ function App() {
   const { solutions } = useWords()
   const { loggedUser, leaderboards, setLoggedUser, updateLoggedUser, handleLogout, getLeaderboards, handleFinishedWord } = useAuthContext()
   const [gameType, setGameType] = useState("classic")
-  console.log(solutions, loggedUser)
+  //console.log(solutions, loggedUser)
   return (
     <div className="App">
       <header>

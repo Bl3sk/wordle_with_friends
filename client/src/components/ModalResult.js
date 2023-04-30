@@ -7,7 +7,7 @@ const Modal = ( { solutions, gameType, totalScore, getLeaderboards } ) => {
     const thumbIcon = gameStatus.status === "win" ? "bi bi-hand-thumbs-up" : "bi bi-hand-thumbs-down";
     const resultTries = gameStatus.round + "/6";
     const score = 600 - (gameStatus.round - 1) * 100;
-    console.log(gameStatus)
+   // console.log(gameStatus)
     const result = gameStatus.usedWords.filter((word) => {
       if (Object.keys(word).length === 0) return false
       return true

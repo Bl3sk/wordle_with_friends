@@ -6,7 +6,7 @@ import * as bootstrap from 'bootstrap';
 function useAuthContext() {
     const [loggedUser, setLoggedUser] = useState("")
     const [leaderboards, setLeaderboards] = useState("")
-    console.log({loggedUser})
+    //console.log({loggedUser})
 
     function formatDate(registered) {
       const date = new Date(registered)
@@ -19,7 +19,7 @@ function useAuthContext() {
     // získání přihlášeného uživatele z local storage
     useEffect(() => {
         const userFromStorage = JSON.parse(localStorage.getItem("user"))
-        console.log({userFromStorage})
+        //console.log({userFromStorage})
         if (userFromStorage) {
           try {
             const decoded = jwtDecode(userFromStorage.jwt_token);
@@ -31,9 +31,9 @@ function useAuthContext() {
             })
               .then((res) => {
                   const data = res.data
-                  console.log("Získana data: ", data)
+                  //console.log("Získana data: ", data)
                   if(!res.data) {
-                      console.log("Nedostali jsme žádná data.")
+                      //console.log("Nedostali jsme žádná data.")
                       return
                   } else {
                     data.jwt_token = userFromStorage.jwt_token
@@ -55,14 +55,14 @@ function useAuthContext() {
     // aktualizace přihlášeného uživatele z local storage
     useEffect(() => { 
         if (!loggedUser) return
-        console.log("TESSSSSSSSSTT v EEEFFECT,", loggedUser)
+        //console.log("TESSSSSSSSSTT v EEEFFECT,", loggedUser)
         let user = {
           _id: loggedUser._id,
           nickname: loggedUser.nickname,
           jwt_token: loggedUser.jwt_token
         }
         user = JSON.stringify(user)
-        console.log("USEEEEEEEEEER",loggedUser)
+        //console.log("USEEEEEEEEEER",loggedUser)
         if (user) localStorage.setItem("user", user)
     }, [loggedUser])
     
@@ -72,9 +72,9 @@ function useAuthContext() {
           method: "GET"
       })
       .then((data) => {
-          console.log("Získana data: ", data)
+          //console.log("Získana data: ", data)
           if(!data.data) {
-              console.log("Nedostali jsme žádná data.")
+              //console.log("Nedostali jsme žádná data.")
               return
           } else {
             const avatar = data.data.avatar
@@ -87,7 +87,7 @@ function useAuthContext() {
           }
       })
       .catch(err => {
-          console.log("Během získávání uživatele se něco pokazilo.", err)
+          //console.log("Během získávání uživatele se něco pokazilo.", err)
       })
     } 
 
@@ -101,15 +101,15 @@ function useAuthContext() {
         }
       })
       .then((res) => {
-        console.log("Challenge vymazána.")             
+        //console.log("Challenge vymazána.")             
       })
       .catch((err) => {
-        console.log(err, err.response);
+        //console.log(err, err.response);
       })
     }
 
     function handleFinishedWord (increase, wordId, gameType) {
-      console.log(gameType)
+      //console.log(gameType)
       if (gameType === "challenge") {
         handleFinishedChallenge()
         return
@@ -133,7 +133,7 @@ function useAuthContext() {
              
       })
       .catch((err) => {
-        console.log(err, err.response);
+        //console.log(err, err.response);
       })
     }
 
@@ -147,7 +147,7 @@ function useAuthContext() {
       const modalBackdrop = document.querySelector('.modal-backdrop')
       if (modalBackdrop) {
         const modalResult = document.querySelector('#resultModal');
-        console.log(document.querySelector('.modal-backdrop'))
+        //console.log(document.querySelector('.modal-backdrop'))
         modalResult.style.display = 'none';
         modalBackdrop.style.display = 'none';
       }
@@ -157,16 +157,16 @@ function useAuthContext() {
         method: "GET"
       })
       .then((data) => {
-          console.log("Získana data: ", data)
+          //console.log("Získana data: ", data)
           if(!data.data) {
-              console.log("Nedostali jsme žádná data.")
+              //console.log("Nedostali jsme žádná data.")
               return
           }
-          console.log("Jdeme změnit Leaderboards")
+          //console.log("Jdeme změnit Leaderboards")
           setLeaderboards(data.data)
       })
       .catch(err => {
-          console.log("Během získávání uživatele se něco pokazilo.", err)
+          //console.log("Během získávání uživatele se něco pokazilo.", err)
       })
     }
       

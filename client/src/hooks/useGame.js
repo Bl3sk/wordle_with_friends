@@ -4,7 +4,7 @@ function useGame( solutions, gameType, handleFinishedWord ) {
     // npm seznam wordle slov (guessesOnly = wordlist.cache.guesses)
     const wordlist = require("wordle-wordlist")
     const allWords = wordlist.cache.all
-    console.log(solutions, "GAMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+    //console.log(solutions, "GAMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
     // useState pro informace o hře
     const defaultUsedKeys = {
         q: "key",
@@ -48,12 +48,12 @@ function useGame( solutions, gameType, handleFinishedWord ) {
     const pauseGame = useRef(false);
     const alreadyUpdatedScore = useRef(false);
     const usedKeysHelper = useRef(defaultUsedKeys);
-    console.log(solutionWord, "v use Game")
+    //console.log(solutionWord, "v use Game")
 
     // update score
     if (gameStatus.status !== "in progress" && !alreadyUpdatedScore.current) {
       alreadyUpdatedScore.current = true
-      console.log("JDEME NA UPDATE SCOREEEEEEEEEEEEEEEEEEEEEEE")
+      //console.log("JDEME NA UPDATE SCOREEEEEEEEEEEEEEEEEEEEEEE")
       const increase = 600 - (gameStatus.round - 1) * 100
       handleFinishedWord(increase, solutions._id, gameType)
     } 
