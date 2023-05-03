@@ -68,7 +68,7 @@ const ModalProfile = ( { loggedUser, updateLoggedUser } ) => {
       })
       .catch((err) => {
         //console.log(err, err.response);
-        const usedData = err.response.data.data;
+        //const usedData = err.response.data.data;
         //console.log(usedData)
         const nicknamesArr = [...alreadyUsed.usedNicknames]
         if (err.response.status === 409) nicknamesArr.push(editData.nickname)

@@ -40,7 +40,7 @@ const ModalLeaderboards = ( {ownScore, leaderboards} ) => {
                     </tbody>
                   </table>
                 </div>
-                <p>Your score: {ownScore}</p>
+                {ownScore && <p>Your score: {ownScore}</p>}
             </div>
           </div>
         </div>

@@ -6,10 +6,11 @@ import ModalProfile from "./components/ModalProfile";
 import ModalForm from "./components/ModalForm";
 import ModalLeaderboards from './components/ModalLeaderboards';
 import Challenge from './components/Challenge';
-import { useState } from 'react';
+import { useState, createContext } from 'react';
 import { Link } from "react-router-dom";
 import * as bootstrap from 'bootstrap';
 
+export const WordContext = createContext()
 
 function App() {
   const { solutions } = useWords()
@@ -74,9 +75,11 @@ function App() {
       <button className={ gameType==="challenge" ? "button selected chall" : "button chall" } onClick={ () => setGameType("challenge") }>Challenge</button>
       { gameType === "classic" && <Countdown />}
       { solutions.words === null && <div><div className="spinner-border m-5" role="status"/> <p>Please wait, it takes around 30 seconds to start backend server on Render(hosting).</p></div> }
-      { solutions.words !== null && gameType==="classic" && <Game solutions={ solutions } totalScore={loggedUser.score} gameType="classic" handleFinishedWord={handleFinishedWord} getLeaderboards={getLeaderboards} /> }
       { !loggedUser && gameType==="challenge" && <div><p>This content is only for logged users. Please login.</p></div> }
-      { loggedUser && gameType==="challenge" && <Challenge loggedUser={loggedUser} handleFinishedWord={handleFinishedWord} getLeaderboards={getLeaderboards}/> }
+      <WordContext.Provider value={{ handleFinishedWord, getLeaderboards }}>
+        { loggedUser && gameType==="challenge" && <Challenge loggedUser={loggedUser}/> }
+        { solutions.words !== null && gameType==="classic" && <Game solutions={ solutions } totalScore={loggedUser.score} gameType="classic"/> }
+      </WordContext.Provider>
       <ModalForm setLoggedUser={setLoggedUser}/>
       <ModalProfile loggedUser={loggedUser} updateLoggedUser={updateLoggedUser}/>
       <ModalLeaderboards ownScore={loggedUser.score} leaderboards={leaderboards}/>

@@ -3,11 +3,13 @@ import Board from "./Board";
 import Toast from "./Toast";
 import ResultModal from "./ModalResult";
 import useGame from "../hooks/useGame";
-import { useEffect, createContext } from "react";
+import { WordContext } from "../App";
+import { useEffect, createContext, useContext } from "react";
 
 export const GameContext = createContext()
 
-function Game( { solutions, gameType, totalScore, handleFinishedWord, getLeaderboards } ) {
+function Game( { solutions, gameType, totalScore } ) {
+  const {handleFinishedWord, getLeaderboards} = useContext(WordContext);
   const { gameStatus, currWord, messageToast, handleKeyClick } = useGame(solutions, gameType, handleFinishedWord);
   useEffect(() => {
     window.addEventListener('keyup', handleKeyClick);
