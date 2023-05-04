@@ -21,6 +21,14 @@ const FormLogin = ( {setDisplayForm, setLoggedUser} ) => {
           showFeedback("d-none")
           setLoggedUser(res.data)
           //console.log("RESSSSSSSSSSSSSSSSSSSSSS", res.data)
+          let user = {
+            _id: res.data._id,
+            nickname: res.data.nickname,
+            jwt_token: res.data.jwt_token
+          }
+          user = JSON.stringify(user)
+          //console.log("USEEEEEEEEEER",loggedUser)
+          if (user) localStorage.setItem("user", user)
           window.location.reload();
         }
       })
